@@ -20,10 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} font-sans antialiased`}
-      >
+    <html lang="en" className={inter.variable}>
+      <body className="bg-white text-[#1d1d1f] font-sans antialiased min-h-screen">
         {children}
       </body>
     </html>
