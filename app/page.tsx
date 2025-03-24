@@ -22,6 +22,7 @@ export default function Home() {
     victoria: false,
     iconic: false
   });
+  const [copied, setCopied] = useState(false);
   
   const adhdImages = [
     { src: "/images/adhd (1).png", alt: "ADHD Learning Platform - Main View" },
@@ -170,21 +171,31 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [personalPhotos.length]);
 
+  // Add this function to handle copying to clipboard
+  const copyToClipboard = (email: string) => {
+    navigator.clipboard.writeText(email)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      })
+      .catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+  };
+
   return (
     <div 
       className="min-h-screen p-8 bg-white text-[#1d1d1f] flex flex-col" 
       style={mainContainerStyle}
     >
-      <main className="max-w-4xl mx-auto relative">
+      <div className="max-w-4xl mx-auto w-full relative">
         <div ref={introRef} style={introStyle} className="mb-8">
           <h1 className="clean-heading text-5xl font-semibold mb-8 text-[#1d1d1f] text-center md:text-left">
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
           <div className="mb-10">
             <p className="text-xl leading-relaxed font-light tracking-tight text-center md:text-left">
-              Welcome to my portfolio website. I am passionate about creating beautiful and functional web applications
-              that solve real-world problems. With expertise in modern web technologies and AI,
-              I strive to deliver innovative solutions through clean and efficient code. I am open to new opportunities!
+              Welcome to my portfolio website. I am a Computer Science and Artificial Intelligence student with an insatiable curiosity and a true passion for learning. I have hands-on experience in web and app development as well as machine learning models. I also have some background in the startup industry with several prizes in entrepreneurial competitions. I am especially interested in robotics and exploring the intersection between the virtual and physical world. I am open to new opportunities!
             </p>
           </div>
 
@@ -207,20 +218,26 @@ export default function Home() {
               <FaLinkedin className="text-lg" />
               LinkedIn
             </a>
-            <a 
-              href="mailto:iciaradelinoordax@gmail.com"
-              className="flex items-center gap-2 px-6 py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+            <button 
+              onClick={() => copyToClipboard('iciaradelinoordax@gmail.com')}
+              className="group relative flex items-center gap-2 px-6 py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
               <HiMail className="text-lg" />
               Email
-            </a>
+              <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                {copied ? 'Copied!' : 'Copy email to clipboard'}
+              </span>
+            </button>
             <a 
-              href="/cv_iciar_adeliño.pdf" 
-              target="_blank"
-              className="flex items-center gap-2 px-6 py-3 border-[1.5px] border-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              href="/cv_iciar_adelino.pdf" 
+              download
+              className="group relative flex items-center gap-2 px-6 py-3 border-[1.5px] border-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
               <HiDocumentText className="text-lg" />
               CV
+              <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                Download file
+              </span>
             </a>
           </div>
         </div>
@@ -252,7 +269,7 @@ export default function Home() {
                       : 'hover:scale-105'
                   }`}
                 >
-                  Experience
+                  Competitons
                 </a>
               </li>
               <li>
@@ -265,7 +282,7 @@ export default function Home() {
                       : 'hover:scale-105'
                   }`}
                 >
-                  Technologies
+                  Skills and technologies
                 </a>
               </li>
               <li>
@@ -285,7 +302,7 @@ export default function Home() {
           </nav>
 
           {/* Content Column */}
-          <div className="flex-1 space-y-16">
+          <div className="flex-1 space-y-16 max-w-2xl">
             <section id="projects" className="scroll-mt-8">
               <h2 className="clean-heading text-3xl font-semibold mb-6 tracking-tight">Projects</h2>
               <div className="space-y-12">
@@ -502,15 +519,37 @@ export default function Home() {
             </section>
 
             <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-6">Experience</h2>
-              <div className="space-y-6">
+              <h2 className="clean-heading text-3xl font-semibold mb-6">Competitions and awards</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2"> IE HackEd Hackathon - DivergED</h3>
+                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">March 2025</p>
+                  <ul className="font-light text-base list-disc pl-4 space-y-2">
+                    <li>First place award from 20 competing teams </li>
+                  </ul>
+                </div>
                
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Full Stack Web Developer - Mappy</h3>
-                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">Tech Venture Bootcamp • February 2025 - March 2025</p>
+                  <h3 className="text-lg font-medium mb-2"> 2025 Tech Venture Bootcamp - Mappy</h3>
+                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">February 2025 - March 2025</p>
                   <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>Designed and implemented UI/UX for a travel planning website using React and Next.js</li>
-                    <li>Built backend infrastructure using TypeScript, Supabase, and integrated Amadeus and OpenAI APIs</li>
+                    <li>Top 5 from 20 competing teams </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-2"> NTT Hackathon </h3>
+                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">February 2025</p>
+                  <ul className="font-light text-base list-disc pl-4 space-y-2">
+                    <li>Seventh place </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-2"> 2024 Tech Venture Bootcamp - Carlink</h3>
+                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">October 2024</p>
+                  <ul className="font-light text-base list-disc pl-4 space-y-2">
+                    <li>3rd place award</li>
                   </ul>
                 </div>
               </div>
@@ -525,23 +564,42 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-3">Web Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">React.js / Next.js</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]">React </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">TypeScript</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]"> Next.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">React Native / Expo</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]"> Node </h3>
+                    </div>
+                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-sm font-medium text-[#8F2D56]">API integrations</h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* App deevelopment Category */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">App Development</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-sm font-medium text-[#8F2D56]">React Native</h3>
+                    </div>
+                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-sm font-medium text-[#8F2D56]">Expo Go</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm font-medium text-[#8F2D56]">Supabase</h3>
+                    </div>
+                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-sm font-medium text-[#8F2D56]">Database Management</h3>
                     </div>
                   </div>
                 </div>
                 
                 {/* AI & Machine Learning Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">AI & Machine Learning</h3>
+                  <h3 className="text-lg font-medium mb-3">Machine Learning</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm font-medium text-[#8F2D56]">OpenCV / Computer Vision</h3>
@@ -550,61 +608,40 @@ export default function Home() {
                       <h3 className="text-sm font-medium text-[#8F2D56]">YOLOv8</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">XGBoost / Prophet</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]">XGBoost </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">OpenAI API</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]">Prophet</h3>
                     </div>
                   </div>
                 </div>
                 
-                {/* Robotics & Tools Category */}
+                {/* Programming languages Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Robotics & Tools</h3>
+                  <h3 className="text-lg font-medium mb-3">Programming languages</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">ROS</h3>
-                    </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm font-medium text-[#8F2D56]">Python</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Git / GitHub</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]">Javascript</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">OCR Technologies</h3>
+                      <h3 className="text-sm font-medium text-[#8F2D56]">Typescript</h3>
+                    </div>
+                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-sm font-medium text-[#8F2D56]"> C </h3>
                     </div>
                   </div>
                 </div>
                 
-                {/* APIs & Integration Category */}
-                <div>
-                  <h3 className="text-lg font-medium mb-3">APIs & Integration</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">RESTful APIs</h3>
-                    </div>
-                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Amadeus API</h3>
-                    </div>
-                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Blackboard Integration</h3>
-                    </div>
-                    <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Database Management</h3>
-                    </div>
-                  </div>
-                </div>
               </div>
             </section>
 
             <section id="about" className="scroll-mt-8 mb-16">
               <h2 className="clean-heading text-3xl font-semibold mb-6">About Me</h2>
               <p className="text-lg font-light leading-relaxed mb-10">
-                I'm a passionate Full Stack Developer with a strong foundation in computer science and 
-                a keen interest in creating efficient, scalable web applications. Based in Madrid, 
-                I combine technical expertise with creative problem-solving to deliver high-quality 
-                software solutions.
+                I'm a very curious and active student. I love doing sports like climbing, padel or horserding. 
               </p>
               
               {/* Photo Carousel */}
@@ -686,7 +723,7 @@ export default function Home() {
 
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
