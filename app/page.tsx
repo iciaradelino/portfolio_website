@@ -7,6 +7,7 @@ import { HiMail } from "react-icons/hi";
 import { HiDocumentText } from "react-icons/hi2";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoAdd } from "react-icons/io5";
+import { FiMapPin } from "react-icons/fi";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('projects');
@@ -237,6 +238,10 @@ export default function Home() {
                 Download file
               </span>
             </a>
+            <div className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide">
+              <FiMapPin className="text-lg text-[#D81159]" />
+              Based in Madrid
+            </div>
           </div>
         </div>
 
@@ -339,8 +344,8 @@ export default function Home() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-xl font-medium tracking-tight mb-2">DivergED - ADHD Learning Platform</h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">OCR • OpenAI API • Blackboard Integration</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Built a learning platform for ADHD students that syncs with Blackboard, featuring OCR for PDF recognition and integrated AI chatbots. Awarded 1st place.</p>
+                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">OCR • OpenAI API • Blackboard API</p>
+                      <p className="font-light text-base leading-relaxed text-zinc-700">Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.</p>
                     </div>
                     <button 
                       onClick={() => toggleImageVisibility('adhd')}
@@ -400,7 +405,7 @@ export default function Home() {
                     <div>
                       <h3 className="text-xl font-medium tracking-tight mb-2">Energy Production Prediction Model - NTT Hackathon</h3>
                       <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">XGBoost • Prophet • Machine Learning</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a machine learning model to predict energy production from eolic and solar plants for the NTT Hackathon.</p>
+                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a machine learning model to predict energy production from eolic and solar plants using XGBooost and Prophet for the NTT Hackathon.</p>
                     </div>
                     <button 
                       onClick={() => toggleImageVisibility('energy')}
@@ -430,8 +435,8 @@ export default function Home() {
                         VictorIA - IEU Robotics and AI Club
                         <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">In Development</span>
                       </h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">ROS • OPENCV • PYTHON • January 2025 - Present</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Programming a robotic arm to play Connect 4 using computer vision (OpenCV), ROS, and WidowX 250 S</p>
+                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">ROS • OPENCV • PYTHON </p>
+                      <p className="font-light text-base leading-relaxed text-zinc-700">Programming a robotic arm (WidowX 250 S) to play Connect 4 using python, computer vision (OpenCV) and ROS.</p>
                     </div>
                     <button 
                       onClick={() => toggleImageVisibility('victoria')}
@@ -461,8 +466,8 @@ export default function Home() {
                         Be Iconic - Fashion App
                         <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">In Development</span>
                       </h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">Venture Lab • March 2025 - Present</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Developing a mobile app using React Native and Expo Go for digital wardrobe management with features for clothing organization and management</p>
+                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">REACT NATIVE • EXPO GO • SUPABSE</p>
+                      <p className="font-light text-base leading-relaxed text-zinc-700">Designing the UI and UX for a fashion mobile app. Building the frontend using JavaScript, React Native and Expo Go and the backend using Typescript and Supabase for users and data management.</p>
                     </div>
                     <button 
                       onClick={() => toggleImageVisibility('iconic')}
@@ -490,7 +495,7 @@ export default function Home() {
                     <div>
                       <h3 className="text-xl font-medium tracking-tight mb-2">Clothing Recognition Website</h3>
                       <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">Python • OpenCV • YOLOv8 • Machine Learning</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a computer vision model that identifies clothing items in real-time, leveraging the Fashionpedia dataset and integrated it into a website.</p>
+                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app... </p>
                     </div>
                     <button 
                       onClick={() => toggleImageVisibility('clothing')}
