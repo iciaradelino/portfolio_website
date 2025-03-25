@@ -203,25 +203,25 @@ export default function Home() {
               href="https://github.com/iciaradelino" 
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-[#D81159] text-white rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#D81159] text-white rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <FaGithub className="text-lg" />
+              <FaGithub className="text-base md:text-lg" />
               GitHub
             </a>
             <a
               href="https://www.linkedin.com/in/ic%C3%ADar-adeli%C3%B1o-219b53331/?trk=opento_sprofile_topcard" 
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-[#8F2D56] text-white rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#8F2D56] text-white rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <FaLinkedin className="text-lg" />
+              <FaLinkedin className="text-base md:text-lg" />
               LinkedIn
             </a>
             <button 
               onClick={() => copyToClipboard('iciaradelinoordax@gmail.com')}
-              className="group relative flex items-center gap-2 px-6 py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="group relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <HiMail className="text-lg" />
+              <HiMail className="text-base md:text-lg" />
               Email
               <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 {copied ? 'Copied!' : 'Copy email to clipboard'}
@@ -230,24 +230,24 @@ export default function Home() {
             <a 
               href="/cv_iciar_adelino.pdf" 
               download
-              className="group relative flex items-center gap-2 px-6 py-3 border-[1.5px] border-[#FFBC42] text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="group relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border-[1.5px] border-[#FFBC42] text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <HiDocumentText className="text-lg" />
+              <HiDocumentText className="text-base md:text-lg" />
               CV
               <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 Download file
               </span>
             </a>
-            <div className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-[15px] font-normal tracking-wide">
-              <FiMapPin className="text-lg text-[#D81159]" />
+            <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide">
+              <FiMapPin className="text-base md:text-lg text-[#D81159]" />
               Based in Madrid
             </div>
           </div>
         </div>
 
         <div className={`flex gap-12 transition-opacity duration-500 ease-in-out ${shouldShowContent ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          {/* Index Column */}
-          <nav className="w-48 flex-shrink-0">
+          {/* Index Column - Hidden on mobile */}
+          <nav className="hidden md:block w-48 flex-shrink-0">
             <ul className="space-y-5 text-base sticky top-[30vh] font-light tracking-wide">
               <li>
                 <a 
@@ -304,8 +304,8 @@ export default function Home() {
             </ul>
           </nav>
 
-          {/* Content Column */}
-          <div className="flex-1 space-y-16 max-w-2xl">
+          {/* Content Column - Full width on mobile */}
+          <div className="flex-1 space-y-16 max-w-2xl w-full">
             <section id="projects" className="scroll-mt-8">
               <h2 className="clean-heading text-3xl font-semibold mb-10 tracking-tight">Projects</h2>
               <div className="space-y-12">
@@ -649,23 +649,20 @@ export default function Home() {
               </p>
               
               <div className="mt-6 w-full overflow-hidden relative mb-10">
-                {/* Left shadow overlay */}
-                
                 <div 
                   ref={carouselRef}
-                  className={`flex gap-4 py-4 ${isCarouselAnimating ? 'animate-carousel' : ''}`}
+                  className={`flex gap-2 md:gap-4 py-4 ${isCarouselAnimating ? 'animate-carousel' : ''}`}
                   style={{
                     width: 'fit-content',
                   }}
                 >
-                  {/* Duplicate images to create a seamless loop effect */}
                   {[...personalImages, ...personalImages].map((image, index) => (
                     <div 
                       key={index} 
                       className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
                       style={{ 
-                        width: '280px',
-                        height: '200px',
+                        width: '200px',
+                        height: '150px',
                         background: 'white'
                       }}
                     >
@@ -678,9 +675,6 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                
-                {/* Right shadow overlay */}
-                
               </div>
             </section>
 
