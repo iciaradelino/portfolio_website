@@ -11,9 +11,11 @@ import { IoAdd } from "react-icons/io5";
 export default function Home() {
   const [activeSection, setActiveSection] = useState('projects');
   const [currentADHDImage, setCurrentADHDImage] = useState(0);
+  const [currentPersonalImage, setCurrentPersonalImage] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [contentVisible, setContentVisible] = useState(false);
   const introRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [visibleImages, setVisibleImages] = useState({
     mappy: false,
     adhd: false,
@@ -23,11 +25,24 @@ export default function Home() {
     iconic: false
   });
   const [copied, setCopied] = useState(false);
+  const [isCarouselAnimating, setIsCarouselAnimating] = useState(false);
   
   const adhdImages = [
     { src: "/images/adhd (1).png", alt: "ADHD Learning Platform - Main View" },
     { src: "/images/adhd (2).png", alt: "ADHD Learning Platform - Features View" },
     { src: "/images/adhd (3).png", alt: "ADHD Learning Platform - Dashboard View" }
+  ];
+
+  const personalImages = [
+    { src: "/images/personal/horse_jump.jpg", alt: "Horse Jumping" },
+    { src: "/images/personal/scuba.jpg", alt: "Scuba Diving" },
+    { src: "/images/personal/surfskate.jpg", alt: "Surfskate" },
+    { src: "/images/personal/wing.jpg", alt: "Wing Foiling" },
+    { src: "/images/personal/horse2.jpg", alt: "Horseback Riding" },
+    { src: "/images/personal/surf.jpg", alt: "Surfing" },
+    { src: "/images/personal/piano.JPG", alt: "Playing Piano" },
+    { src: "/images/personal/horse.PNG", alt: "Horse" },
+    { src: "/images/personal/surf2.jpg", alt: "Surfing" }
   ];
 
   const toggleImageVisibility = (project: keyof typeof visibleImages) => {
@@ -43,6 +58,14 @@ export default function Home() {
 
   const prevADHDImage = () => {
     setCurrentADHDImage((prev) => (prev === 0 ? adhdImages.length - 1 : prev - 1));
+  };
+
+  const nextPersonalImage = () => {
+    setCurrentPersonalImage((prev) => (prev === personalImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevPersonalImage = () => {
+    setCurrentPersonalImage((prev) => (prev === 0 ? personalImages.length - 1 : prev - 1));
   };
 
   // Track if intro has reached final position
@@ -133,44 +156,6 @@ export default function Home() {
   // Determine if content should be visible (include introLocked state)
   const shouldShowContent = contentVisible || scrollProgress > 0.3 || introLocked;
 
-  // Add this near the top of the component, with the other state declarations
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-
-  // Add this with the other constants at the top of the component
-  const personalPhotos = [
-    { 
-      src: "/images/personal1.jpg", 
-      alt: "Personal photo 1",
-      caption: "Coding at my favorite café in Madrid" 
-    },
-    { 
-      src: "/images/personal2.jpg", 
-      alt: "Personal photo 2",
-      caption: "Working on a robotics project" 
-    },
-    { 
-      src: "/images/personal3.jpg", 
-      alt: "Personal photo 3",
-      caption: "Giving a tech presentation at IE University" 
-    },
-    { 
-      src: "/images/personal4.jpg", 
-      alt: "Personal photo 4",
-      caption: "Hiking in the mountains - where I get my best ideas" 
-    }
-  ];
-  
-  // Add auto-sliding functionality
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPhotoIndex(prevIndex => 
-        prevIndex === personalPhotos.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 3000); // Change slide every 3 seconds
-    
-    return () => clearInterval(interval);
-  }, [personalPhotos.length]);
-
   // Add this function to handle copying to clipboard
   const copyToClipboard = (email: string) => {
     navigator.clipboard.writeText(email)
@@ -183,6 +168,19 @@ export default function Home() {
       });
   };
 
+  // Set up auto-scrolling carousel
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    
+    // Start automatic scroll after 1 second
+    const timeout = setTimeout(() => {
+      setIsCarouselAnimating(true);
+    }, 1000);
+    
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <div 
       className="min-h-screen p-8 bg-white text-[#1d1d1f] flex flex-col" 
@@ -194,7 +192,7 @@ export default function Home() {
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
           <div className="mb-10">
-            <p className="text-xl leading-relaxed font-light tracking-tight text-center md:text-left">
+            <p className="text-xl leading-relaxed font-light tracking-tight text-center md:text-left mt-6">
               Welcome to my portfolio website. I am a Computer Science and Artificial Intelligence student with an insatiable curiosity and a true passion for learning. I have hands-on experience in web and app development as well as machine learning models. I also have some background in the startup industry with several prizes in entrepreneurial competitions. I am especially interested in robotics and exploring the intersection between the virtual and physical world. I am open to new opportunities!
             </p>
           </div>
@@ -282,7 +280,7 @@ export default function Home() {
                       : 'hover:scale-105'
                   }`}
                 >
-                  Skills and technologies
+                  Technologies
                 </a>
               </li>
               <li>
@@ -304,12 +302,12 @@ export default function Home() {
           {/* Content Column */}
           <div className="flex-1 space-y-16 max-w-2xl">
             <section id="projects" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-6 tracking-tight">Projects</h2>
+              <h2 className="clean-heading text-3xl font-semibold mb-10 tracking-tight">Projects</h2>
               <div className="space-y-12">
                 <div className="group relative">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2">Mappy - Travel Planning Platform</h3>
+                      <h3 className="text-xl font-medium tracking-tight mb-2 mt-6">Mappy - Travel Planning Platform</h3>
                       <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">React • Next.js • TypeScript • Supabase</p>
                       <p className="font-light text-base leading-relaxed text-zinc-700"> • Designed and built UI/UX for a travel planning website using React and Next.js. </p>
                         <p className="font-light text-base leading-relaxed text-zinc-700"> • Built backend using TypeScript, Supabase, and Amadeus and OpenAI APIs.</p>
@@ -519,18 +517,18 @@ export default function Home() {
             </section>
 
             <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-6">Competitions and awards</h2>
+              <h2 className="clean-heading text-3xl font-semibold mb-10">Competitions and awards</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-medium mb-2"> IE HackEd Hackathon - DivergED</h3>
+                  <h3 className="text-lg font-medium mb-2 mt-6"> IE HackEd Hackathon - DivergED</h3>
                   <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">March 2025</p>
                   <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>First place award from 20 competing teams </li>
+                    <li>First place award from 20 teams </li>
                   </ul>
                 </div>
                
                 <div>
-                  <h3 className="text-lg font-medium mb-2"> 2025 Tech Venture Bootcamp - Mappy</h3>
+                  <h3 className="text-lg font-medium mb-2 mt-6"> 2025 Tech Venture Bootcamp - Mappy</h3>
                   <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">February 2025 - March 2025</p>
                   <ul className="font-light text-base list-disc pl-4 space-y-2">
                     <li>Top 5 from 20 competing teams </li>
@@ -556,12 +554,12 @@ export default function Home() {
             </section>
 
             <section id="technologies" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-6">Skills and technologies</h2>
+              <h2 className="clean-heading text-3xl font-semibold mb-10">Skills and technologies</h2>
               
               <div className="space-y-6">
                 {/* Web Development Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Web Development</h3>
+                  <h3 className="text-lg font-medium mb-3 mt-6">Web Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm font-medium text-[#8F2D56]">React </h3>
@@ -639,85 +637,45 @@ export default function Home() {
             </section>
 
             <section id="about" className="scroll-mt-8 mb-16">
-              <h2 className="clean-heading text-3xl font-semibold mb-6">About Me</h2>
-              <p className="text-lg font-light leading-relaxed mb-10">
-                I'm a very curious and active student. I love doing sports like climbing, padel or horserding. 
+              <h2 className="clean-heading text-3xl font-semibold mb-10">About Me</h2>
+              <p className="text-lg font-light leading-relaxed mb-10 mt-6">
+                I'm a very curious and active person, always looking to get out of my comfort zone, try new things and meet new people. 
+                Besides from coding and academics, I love doing adrenaline-rushing sports. Currently I really enjoy climbing, padel and horserding. 
               </p>
               
-              {/* Photo Carousel */}
-              <div className="mt-8">                
-                <div className="relative max-w-3xl mx-auto">
-                  {/* Carousel Component */}
-                  <div className="carousel">
-                    {/* Photo Carousel - Auto-sliding */}
-                    <div className="relative overflow-hidden rounded-xl h-64">
-                      <div 
-                        className="flex transition-transform duration-500 ease-in-out" 
-                        style={{ 
-                          transform: `translateX(-${currentPhotoIndex * 100}%)`,
-                          width: `${personalPhotos.length * 100}%`
-                        }}
-                      >
-                        {personalPhotos.map((photo, index) => (
-                          <div 
-                            key={index} 
-                            className="relative w-full" 
-                            style={{ width: `${100 / personalPhotos.length}%` }}
-                          >
-                            <Image
-                              src={photo.src}
-                              alt={photo.alt}
-                              width={800}
-                              height={450}
-                              className="w-full h-64 object-cover"
-                            />
-                            {/* Photo caption */}
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-sm">
-                              {photo.caption}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Manual navigation buttons (optional) */}
-                      <button 
-                        onClick={() => {
-                          const newIndex = currentPhotoIndex === 0 ? personalPhotos.length - 1 : currentPhotoIndex - 1;
-                          setCurrentPhotoIndex(newIndex);
-                        }}
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full text-[#8F2D56] hover:bg-white transition-all duration-200 focus:outline-none"
-                        aria-label="Previous photo"
-                      >
-                        <IoIosArrowBack className="text-xl" />
-                      </button>
-                      
-                      <button 
-                        onClick={() => {
-                          const newIndex = currentPhotoIndex === personalPhotos.length - 1 ? 0 : currentPhotoIndex + 1;
-                          setCurrentPhotoIndex(newIndex);
-                        }}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full text-[#8F2D56] hover:bg-white transition-all duration-200 focus:outline-none"
-                        aria-label="Next photo"
-                      >
-                        <IoIosArrowForward className="text-xl" />
-                      </button>
+              <div className="mt-6 w-full overflow-hidden relative mb-10">
+                {/* Left shadow overlay */}
+                
+                <div 
+                  ref={carouselRef}
+                  className={`flex gap-4 py-4 ${isCarouselAnimating ? 'animate-carousel' : ''}`}
+                  style={{
+                    width: 'fit-content',
+                  }}
+                >
+                  {/* Duplicate images to create a seamless loop effect */}
+                  {[...personalImages, ...personalImages].map((image, index) => (
+                    <div 
+                      key={index} 
+                      className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
+                      style={{ 
+                        width: '280px',
+                        height: '200px',
+                        background: 'white'
+                      }}
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
-                    
-                    {/* Indicators */}
-                    <div className="flex justify-center space-x-2 mt-4">
-                      {personalPhotos.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentPhotoIndex(index)}
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                            currentPhotoIndex === index ? 'bg-[#D81159] w-4' : 'bg-gray-300'
-                          }`}
-                          aria-label={`View photo ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </div>
+                
+                {/* Right shadow overlay */}
+                
               </div>
             </section>
 
