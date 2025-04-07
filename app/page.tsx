@@ -6,32 +6,92 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { HiDocumentText } from "react-icons/hi2";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { IoAdd } from "react-icons/io5";
+import { IoAdd, IoClose } from "react-icons/io5";
 import { FiMapPin } from "react-icons/fi";
+
+// Define a type for project media items (images or videos)
+interface ProjectMedia {
+  type: 'image' | 'video';
+  src: string;
+  alt: string;
+}
+
+// Define a type for project data
+interface Project {
+  id: string;
+  title: string;
+  techStack: string;
+  description: string | string[]; // Allow single string or array for bullet points
+  media: ProjectMedia[];
+  status?: 'In Development'; // Optional status
+}
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('projects');
-  const [currentADHDImage, setCurrentADHDImage] = useState(0);
   const [currentPersonalImage, setCurrentPersonalImage] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [contentVisible, setContentVisible] = useState(false);
   const introRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [visibleImages, setVisibleImages] = useState({
-    mappy: false,
-    adhd: false,
-    clothing: false,
-    energy: false,
-    victoria: false,
-    iconic: false
-  });
   const [copied, setCopied] = useState(false);
   const [isCarouselAnimating, setIsCarouselAnimating] = useState(false);
   
-  const adhdImages = [
-    { src: "/images/adhd (1).png", alt: "ADHD Learning Platform - Main View" },
-    { src: "/images/adhd (2).png", alt: "ADHD Learning Platform - Features View" },
-    { src: "/images/adhd (3).png", alt: "ADHD Learning Platform - Dashboard View" }
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [currentModalImageIndex, setCurrentModalImageIndex] = useState(0);
+  const [isModalRendered, setIsModalRendered] = useState(false); // Track if modal has been rendered at least once
+
+  // Restructured Project Data
+  const projectsData: Project[] = [
+    {
+      id: "mappy",
+      title: "Mappy - Travel Planning Platform",
+      techStack: "React • Next.js • TypeScript • Supabase",
+      description: [ // Use array for bullet points
+        "Designed and built UI/UX for a travel planning website using React and Next.js.",
+        "Built backend using TypeScript, Supabase, and Amadeus and OpenAI APIs."
+      ],
+      media: [{ type: 'image', src: "/images/mappy_image.png", alt: "Mappy Travel Planning Platform" }],
+      status: "In Development",
+    },
+    {
+      id: "diverged",
+      title: "DivergED - ADHD Learning Platform",
+      techStack: "OCR • OpenAI API • Blackboard API",
+      description: "Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.",
+      media: [{ type: 'video', src: "/images/adhd_video.mp4", alt: "ADHD Learning Platform Demo" }],
+    },
+    {
+      id: "energy",
+      title: "Energy Production Prediction Model - NTT Hackathon",
+      techStack: "XGBoost • Prophet • Machine Learning",
+      description: "Trained a machine learning model to predict energy production from eolic and solar plants using XGBooost and Prophet for the NTT Hackathon.",
+      media: [{ type: 'image', src: "/images/energy_prediction.png", alt: "Energy Production Prediction Model" }],
+    },
+    {
+      id: "victoria",
+      title: "VictorIA - IEU Robotics and AI Club",
+      techStack: "ROS • OPENCV • PYTHON",
+      description: "Programming a robotic arm (WidowX 250 S) to play Connect 4 using python, computer vision (OpenCV) and ROS.",
+      media: [{ type: 'image', src: "/images/victoria_project.png", alt: "VictorIA Robotics Project" }],
+      status: "In Development",
+    },
+    {
+      id: "iconic",
+      title: "Be Iconic - Fashion App",
+      techStack: "REACT NATIVE • EXPO GO • SUPABASE",
+      description: "Designing the UI and UX for a fashion mobile app. Building the frontend using JavaScript, React Native and Expo Go and the backend using Typescript and Supabase for users and data management.",
+      media: [{ type: 'image', src: "/images/fashion_app.png", alt: "Be Iconic Fashion App" }],
+    },
+    {
+      id: "clothing",
+      title: "Clothing Recognition Website",
+      techStack: "Python • OpenCV • YOLOv8 • Machine Learning",
+      description: "Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app...",
+      media: [{ type: 'image', src: "/images/clothing_recognition.png", alt: "AI Clothing Recognition System" }],
+      status: "In Development",
+    }
   ];
 
   const personalImages = [
@@ -46,21 +106,6 @@ export default function Home() {
     { src: "/images/personal/surf2.jpg", alt: "Surfing" }
   ];
 
-  const toggleImageVisibility = (project: keyof typeof visibleImages) => {
-    setVisibleImages(prev => ({
-      ...prev,
-      [project]: !prev[project]
-    }));
-  };
-
-  const nextADHDImage = () => {
-    setCurrentADHDImage((prev) => (prev === adhdImages.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevADHDImage = () => {
-    setCurrentADHDImage((prev) => (prev === 0 ? adhdImages.length - 1 : prev - 1));
-  };
-
   const nextPersonalImage = () => {
     setCurrentPersonalImage((prev) => (prev === personalImages.length - 1 ? 0 : prev + 1));
   };
@@ -68,6 +113,59 @@ export default function Home() {
   const prevPersonalImage = () => {
     setCurrentPersonalImage((prev) => (prev === 0 ? personalImages.length - 1 : prev - 1));
   };
+
+  // Modal Logic Functions
+  const openModal = (project: Project) => {
+    setSelectedProject(project);
+    setCurrentModalImageIndex(0); // Reset image index
+    setIsModalRendered(true); // Ensure modal is rendered
+    // Using setTimeout to ensure the DOM updates before adding the visible class
+    setTimeout(() => {
+      setIsModalOpen(true);
+    }, 10);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    // Keep the selectedProject until animation completes
+    setTimeout(() => {
+      if (!isModalOpen) {
+        setSelectedProject(null);
+      }
+    }, 300); // Match the transition duration
+  };
+
+  const nextModalImage = () => {
+    if (selectedProject && selectedProject.media.length > 1) {
+      setCurrentModalImageIndex((prev) => (prev === selectedProject.media.length - 1 ? 0 : prev + 1));
+    }
+  };
+
+  const prevModalImage = () => {
+    if (selectedProject && selectedProject.media.length > 1) {
+      setCurrentModalImageIndex((prev) => (prev === 0 ? selectedProject.media.length - 1 : prev - 1));
+    }
+  };
+
+  // Prevent background scrolling when modal is open and handle scrollbar width
+  useEffect(() => {
+    if (isModalOpen) {
+      // Calculate scrollbar width and store it as a CSS variable
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+      
+      // Add modal-open class to body
+      document.body.classList.add('modal-open');
+    } else {
+      // Remove modal-open class from body when modal closes
+      document.body.classList.remove('modal-open');
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isModalOpen]);
 
   // Track if intro has reached final position
   const [introLocked, setIntroLocked] = useState(false);
@@ -243,6 +341,21 @@ export default function Home() {
               Based in Madrid
             </div>
           </div>
+          
+          {/* Scroll down indicator - only visible when scrollY is at 0 */}
+          <div className={`flex flex-col items-center justify-center transition-opacity duration-300 ${scrollY > 0 ? 'opacity-0' : 'opacity-70'}`}>
+            <svg 
+              className="w-6 h-6 text-gray-500 animate-bounce" 
+              fill="none" 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth="2" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </div>
         </div>
 
         <div className={`flex gap-12 transition-opacity duration-500 ease-in-out ${shouldShowContent ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
@@ -309,215 +422,40 @@ export default function Home() {
             <section id="projects" className="scroll-mt-8">
               <h2 className="clean-heading text-3xl font-semibold mb-10 tracking-tight">Projects</h2>
               <div className="space-y-12">
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2 mt-6">Mappy - Travel Planning Platform</h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">React • Next.js • TypeScript • Supabase</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700"> • Designed and built UI/UX for a travel planning website using React and Next.js. </p>
-                        <p className="font-light text-base leading-relaxed text-zinc-700"> • Built backend using TypeScript, Supabase, and Amadeus and OpenAI APIs.</p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('mappy')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
-                  </div>
-                  {visibleImages.mappy && (
-                    <div className="mt-4 overflow-hidden rounded-xl bg-gray-100 max-w-lg">
-                      <Image
-                        src="/images/mappy_image.png"
-                        alt="Mappy Travel Planning Platform"
-                        width={900}
-                        height={150}
-                        className="w-full object-contain transition-transform duration-300"
-                        priority
-                        quality={100}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2">DivergED - ADHD Learning Platform</h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">OCR • OpenAI API • Blackboard API</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.</p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('adhd')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
-                  </div>
-                  {visibleImages.adhd && (
-                    <div className="mt-4 max-w-lg flex items-center space-x-2">
-                      <button 
-                        onClick={prevADHDImage}
-                        className="flex-shrink-0 p-2 text-[#8F2D56] hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none"
-                        aria-label="Previous image"
-                      >
-                        <IoIosArrowBack className="text-lg" />
-                      </button>
-                      
-                      <div className="relative flex-grow">
-                        <div className="overflow-hidden rounded-xl bg-gray-100">
-                          <Image
-                            src={adhdImages[currentADHDImage].src}
-                            alt={adhdImages[currentADHDImage].alt}
-                            width={500}
-                            height={250}
-                            className="w-full object-cover transition-transform duration-300"
-                          />
-                        </div>
-                        <div className="flex justify-center space-x-2 mt-2">
-                          {adhdImages.map((_, index) => (
-                            <button
-                              key={index}
-                              onClick={() => setCurrentADHDImage(index)}
-                              className={`w-2 h-2 rounded-full ${
-                                currentADHDImage === index ? 'bg-[#8F2D56]' : 'bg-gray-300'
-                              }`}
-                              aria-label={`View image ${index + 1}`}
-                            />
-                          ))}
-                        </div>
+                {/* Map through projectsData */}
+                {projectsData.map((project) => (
+                  <div key={project.id} className="group relative">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-medium tracking-tight mb-2 mt-6 flex items-center">
+                          {project.title}
+                          {project.status && (
+                            <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">{project.status}</span>
+                          )}
+                        </h3>
+                        <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">{project.techStack}</p>
+                        {/* Handle description: single string or array */}
+                        {Array.isArray(project.description) ? (
+                          project.description.map((descPoint, index) => (
+                            <p key={index} className="font-light text-base leading-relaxed text-zinc-700"> • {descPoint}</p>
+                          ))
+                        ) : (
+                          <p className="font-light text-base leading-relaxed text-zinc-700">{project.description}</p>
+                        )}
                       </div>
-                      
-                      <button 
-                        onClick={nextADHDImage}
-                        className="flex-shrink-0 p-2 text-[#8F2D56] hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none"
-                        aria-label="Next image"
-                      >
-                        <IoIosArrowForward className="text-lg" />
-                      </button>
+                      {/* Only show the plus button for projects with media content */}
+                      {project.id === 'mappy' || project.id === 'diverged' ? (
+                        <button 
+                          onClick={() => openModal(project)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
+                          aria-label={`Show details for ${project.title}`}
+                        >
+                          <IoAdd className="text-lg" />
+                        </button>
+                      ) : null}
                     </div>
-                  )}
-                </div>
-
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2">Energy Production Prediction Model - NTT Hackathon</h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">XGBoost • Prophet • Machine Learning</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a machine learning model to predict energy production from eolic and solar plants using XGBooost and Prophet for the NTT Hackathon.</p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('energy')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
                   </div>
-                  {visibleImages.energy && (
-                    <div className="mt-4 overflow-hidden rounded-xl bg-gray-100 max-w-lg">
-                      <Image
-                        src="/images/energy_prediction.png"
-                        alt="Energy Production Prediction Model"
-                        width={300}
-                        height={150}
-                        className="w-full object-cover transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2 flex items-center">
-                        VictorIA - IEU Robotics and AI Club
-                        <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">In Development</span>
-                      </h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">ROS • OPENCV • PYTHON </p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Programming a robotic arm (WidowX 250 S) to play Connect 4 using python, computer vision (OpenCV) and ROS.</p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('victoria')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
-                  </div>
-                  {visibleImages.victoria && (
-                    <div className="mt-4 overflow-hidden rounded-xl bg-gray-100 max-w-lg">
-                      <Image
-                        src="/images/victoria_project.png"
-                        alt="VictorIA Robotics Project"
-                        width={300}
-                        height={150}
-                        className="w-full object-cover transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2 flex items-center">
-                        Be Iconic - Fashion App
-                        <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">In Development</span>
-                      </h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">REACT NATIVE • EXPO GO • SUPABSE</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Designing the UI and UX for a fashion mobile app. Building the frontend using JavaScript, React Native and Expo Go and the backend using Typescript and Supabase for users and data management.</p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('iconic')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
-                  </div>
-                  {visibleImages.iconic && (
-                    <div className="mt-4 overflow-hidden rounded-xl bg-gray-100 max-w-lg">
-                      <Image
-                        src="/images/fashion_app.png"
-                        alt="Be Iconic Fashion App"
-                        width={300}
-                        height={150}
-                        className="w-full object-cover transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="group relative">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium tracking-tight mb-2">Clothing Recognition Website</h3>
-                      <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">Python • OpenCV • YOLOv8 • Machine Learning</p>
-                      <p className="font-light text-base leading-relaxed text-zinc-700">Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app... </p>
-                    </div>
-                    <button 
-                      onClick={() => toggleImageVisibility('clothing')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                      aria-label="Show image"
-                    >
-                      <IoAdd className="text-lg" />
-                    </button>
-                  </div>
-                  {visibleImages.clothing && (
-                    <div className="mt-4 overflow-hidden rounded-xl bg-gray-100 max-w-lg">
-                      <Image
-                        src="/images/clothing_recognition.png"
-                        alt="AI Clothing Recognition System"
-                        width={300}
-                        height={150}
-                        className="w-full object-cover transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-
+                ))}
               </div>
             </section>
 
@@ -679,6 +617,149 @@ export default function Home() {
             </section>
 
           </div>
+        </div>
+      </div>
+
+      {/* Modal Component - Always rendered but conditionally visible */}
+      <div 
+        className={`modal-backdrop ${isModalOpen ? 'modal-backdrop-visible' : 'modal-backdrop-hidden'}`}
+        onClick={closeModal}
+        role="dialog"
+        aria-modal={isModalOpen ? "true" : "false"}
+        aria-labelledby="project-modal-title"
+        style={{ display: isModalRendered ? 'flex' : 'none' }} // Only render if it has been opened at least once
+      >
+        <div 
+          className={`modal-content ${isModalOpen ? 'modal-content-visible' : 'modal-content-hidden'} font-inter`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {selectedProject && (
+            <>
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition-colors p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                aria-label="Close project details"
+              >
+                <IoClose className="w-5 h-5" />
+              </button>
+
+              {/* Modal Content */}
+              <h3 
+                id="project-modal-title" 
+                className="clean-heading text-2xl font-semibold mb-6 text-[#1d1d1f]"
+              >
+                {selectedProject.title}
+              </h3>
+              <p className="text-[#8F2D56] mt-2 mb-4 font-light text-sm tracking-wider uppercase font-inter">{selectedProject.techStack}</p>
+
+              {/* Description */}
+              <div className="mb-6 prose prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 font-inter">
+                {Array.isArray(selectedProject.description) ? (
+                  <ul className="list-disc pl-5 space-y-1 font-light">
+                    {selectedProject.description.map((descPoint, index) => (
+                      <li key={index}>{descPoint}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="font-light text-base leading-relaxed">{selectedProject.description}</p>
+                )}
+              </div>
+
+              {/* Image/Video Carousel */}
+              {selectedProject.media.length > 0 && (
+                <div className="relative mt-auto">
+                  {selectedProject.media.length > 1 ? (
+                    // Carousel for multiple media items
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={prevModalImage}
+                        className="flex-shrink-0 p-2 text-[#8F2D56] hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Previous image"
+                      >
+                        <IoIosArrowBack className="text-xl" />
+                      </button>
+                      
+                      <div className="relative flex-grow overflow-hidden rounded-lg bg-gray-100 aspect-[16/9]">
+                        {selectedProject.media[currentModalImageIndex].type === 'video' ? (
+                          // Render video
+                          <video
+                            key={selectedProject.media[currentModalImageIndex].src}
+                            src={selectedProject.media[currentModalImageIndex].src}
+                            controls
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          // Render image
+                          <Image
+                            key={selectedProject.media[currentModalImageIndex].src}
+                            src={selectedProject.media[currentModalImageIndex].src}
+                            alt={selectedProject.media[currentModalImageIndex].alt}
+                            fill
+                            className="object-contain transition-opacity duration-300"
+                            quality={90}
+                          />
+                        )}
+                      </div>
+                      
+                      <button 
+                        onClick={nextModalImage}
+                        className="flex-shrink-0 p-2 text-[#8F2D56] hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Next image"
+                      >
+                        <IoIosArrowForward className="text-xl" />
+                      </button>
+                    </div>
+                  ) : (
+                    // Single Media Display
+                    <div className="overflow-hidden rounded-lg bg-gray-100 aspect-[16/9]">
+                      {selectedProject.media[0].type === 'video' ? (
+                        // Render video
+                        <video
+                          src={selectedProject.media[0].src}
+                          controls
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        // Render image
+                        <Image
+                          src={selectedProject.media[0].src}
+                          alt={selectedProject.media[0].alt}
+                          fill
+                          className="object-contain"
+                          quality={90}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Dots for multiple media items */}
+                  {selectedProject.media.length > 1 && (
+                    <div className="flex justify-center space-x-2 mt-3">
+                      {selectedProject.media.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentModalImageIndex(index)}
+                          className={`w-2 h-2 rounded-full transition-colors ${
+                            currentModalImageIndex === index ? 'bg-[#8F2D56]' : 'bg-gray-300 hover:bg-gray-400'
+                          }`}
+                          aria-label={`View item ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

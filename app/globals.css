@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --scrollbar-width: 0px; /* Default value, will be calculated by JS */
 }
 
 @theme inline {
@@ -25,12 +26,29 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Proper Inter font class */
+.font-inter {
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Prevent content jumps when modal opens */
+body.modal-open {
+  overflow: hidden;
+  /* Add padding equal to scrollbar width to prevent content jumping */
+  padding-right: var(--scrollbar-width);
+}
+
+/* For position: fixed elements like the modal */
+body.modal-open .fixed {
+  padding-right: var(--scrollbar-width);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .clean-heading {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   letter-spacing: -0.03em;
   margin: 0;
   line-height: 1.2;
@@ -59,4 +77,35 @@ body {
 /* Add hover pause effect */
 .animate-carousel:hover {
   animation-play-state: paused;
+}
+
+/* Modal animation classes */
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  transition: all 0.3s ease;
+}
+
+.modal-backdrop-visible {
+  @apply bg-white/60 backdrop-blur-sm;
+  opacity: 1;
+}
+
+.modal-backdrop-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-content {
+  @apply bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-4xl w-11/12 max-h-[85vh] overflow-y-auto relative flex flex-col z-10;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-content-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.modal-content-hidden {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
