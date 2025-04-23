@@ -109,3 +109,9 @@ body.modal-open .fixed {
   opacity: 0;
   transform: translateY(20px) scale(0.95);
 }
+
+/* Custom cursor for clickable projects (Pink circle with white plus) */
+.cursor-add {
+  /* SVG: Pink circle background (r=11), white plus sign (stroke=1.5) */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="%23D81159"/><path d="M12 7V17M7 12H17" stroke="%23FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') 12 12, pointer;
+}

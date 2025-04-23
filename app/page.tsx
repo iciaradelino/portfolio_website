@@ -48,16 +48,19 @@ export default function Home() {
       title: "Mappy - Travel Planning Platform",
       techStack: "React • Next.js • TypeScript • Supabase",
       description: [ // Use array for bullet points
-        "Designed and built UI/UX for a travel planning website using React and Javascript.",
-        "Built backend using TypeScript, Supabase, and Amadeus and OpenAI APIs."
+        "Designed and implemented the UI/UX for a travel planning web application using React and JavaScript.",
+        "Developed the backend infrastructure utilizing TypeScript, Supabase, and integrated Amadeus and OpenAI APIs for enhanced functionality."
       ],
-      media: [{ type: 'image', src: "/images/mappy_image.png", alt: "Mappy Travel Planning Platform" }],
+      media: [{ type: 'video', src: "/images/mappy_demo.mp4", alt: "Mappy Travel Planning Platform" }],
     },
     {
       id: "victoria",
       title: "VictorIA - IEU Robotics and AI Club",
       techStack: "ROS • OPENCV • PYTHON",
-      description: "Programming a robotic arm (WidowX 250 S) to play Connect 4 using Python, Computer Vision (OpenCV) and ROS.",
+      description: [
+        "Programmed a WidowX 250 S robotic arm to play Connect 4.",
+        "Utilized Python, Computer Vision (OpenCV), and Robot Operating System (ROS) for control and perception."
+      ],
       media: [{ type: 'image', src: "/images/victoria_project.png", alt: "VictorIA Robotics Project" }],
       status: "In Development",
     },
@@ -65,7 +68,11 @@ export default function Home() {
       id: "clothing",
       title: "Clothing Recognition Website",
       techStack: "Python • OpenCV • YOLOv8 • Machine Learning",
-      description: "Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app...",
+      description: [
+        "Trained a YOLOv8 computer vision model on the Fashionpedia dataset in Google Colab for real-time clothing item identification.",
+        "Integrated the model into a functional website.",
+        "Currently developing a mobile application version."
+      ],
       media: [{ type: 'image', src: "/images/clothing_recognition.png", alt: "AI Clothing Recognition System" }],
       status: "In Development",
     },
@@ -73,21 +80,31 @@ export default function Home() {
       id: "energy",
       title: "Energy Production Prediction Model - NTT Hackathon",
       techStack: "XGBoost • Prophet • Machine Learning",
-      description: "Trained a machine learning model to predict energy production from eolic and solar plants using XGBooost and Prophet for the NTT Hackathon.",
+      description: [
+          "Developed a machine learning model to forecast energy production for wind and solar plants.",
+          "Employed XGBoost and Prophet algorithms for time-series prediction during the NTT Hackathon."
+      ],
       media: [{ type: 'image', src: "/images/energy_prediction.png", alt: "Energy Production Prediction Model" }],
     },
     {
       id: "iconic",
       title: "Be Iconic - Fashion App",
       techStack: "REACT NATIVE • EXPO GO • SUPABASE",
-      description: "Designing the UI and UX for a fashion mobile app. Building the frontend using JavaScript, React Native and Expo Go and the backend using Typescript and Supabase for users and data management.",
-      media: [{ type: 'image', src: "/images/fashion_app.png", alt: "Be Iconic Fashion App" }],
-    },    
+      description: [
+          "Designed the UI and UX for a mobile fashion application.",
+          "Built the frontend using JavaScript, React Native, and Expo Go.",
+          "Developed the backend with TypeScript and Supabase for user authentication and data management."
+      ],
+      media: [{ type: 'video', src: "/images/beiconic.mp4", alt: "Be Iconic Fashion App" }],
+    },
     {
       id: "diverged",
       title: "DivergED - ADHD Learning Platform",
       techStack: "OCR • OpenAI API • Blackboard API",
-      description: "Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.",
+      description: [
+        "Developed a demo for an ADHD-focused learning platform offering personalized study tools and scheduling.",
+        "Integrated OCR for PDF processing, OpenAI for chatbot features, and the Blackboard API for course material access."
+      ],
       media: [{ type: 'video', src: "/images/adhd_video.mp4", alt: "ADHD Learning Platform Demo" }],
     },
   ];
@@ -279,7 +296,7 @@ export default function Home() {
       style={mainContainerStyle}
     >
       <div className="max-w-4xl mx-auto w-full relative">
-        <div ref={introRef} style={introStyle} className="mb-8">
+        <div ref={introRef} style={introStyle} className="mb-4">
           <h1 className="clean-heading text-5xl font-semibold mb-8 text-[#1d1d1f] text-center md:text-left">
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
@@ -289,7 +306,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex gap-4 mb-20 justify-center md:justify-start flex-wrap">
+          <div className="flex gap-4 mb-12 justify-center md:justify-start flex-wrap">
             <a 
               href="https://github.com/iciaradelino" 
               target="_blank"
@@ -314,7 +331,7 @@ export default function Home() {
             >
               <HiMail className="text-base md:text-lg" />
               Email
-              <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 {copied ? 'Copied!' : 'Copy email to clipboard'}
               </span>
             </button>
@@ -325,7 +342,7 @@ export default function Home() {
             >
               <HiDocumentText className="text-base md:text-lg" />
               CV
-              <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 Download file
               </span>
             </a>
@@ -335,8 +352,8 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Scroll down indicator - only visible when scrollY is at 0 */}
-          <div className={`flex flex-col items-center justify-center transition-opacity duration-300 ${scrollY > 0 ? 'opacity-0' : 'opacity-70'}`}>
+          {/* Scroll down indicator - only visible when scrollY is 0 AND intro is not locked */}
+          <div className={`flex flex-col items-center justify-center transition-opacity duration-300 ${(scrollY > 0 || introLocked) ? 'opacity-0' : 'opacity-70'}`}>
             <svg 
               className="w-6 h-6 text-gray-500 animate-bounce" 
               fill="none" 
@@ -414,13 +431,24 @@ export default function Home() {
           </nav>
 
           {/* Content Column - Full width on mobile */}
-          <div className="flex-1 space-y-16 max-w-2xl w-full">
+          <div className="flex-1 space-y-12 max-w-2xl w-full">
             <section id="projects" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-10 tracking-tight">Projects</h2>
-              <div className="space-y-12">
+              <h2 className="clean-heading text-3xl font-semibold mb-8 tracking-tight">Projects</h2>
+              <div className="space-y-8">
                 {/* Map through projectsData */}
                 {projectsData.map((project) => (
-                  <div key={project.id} className="group relative">
+                  <div
+                    key={project.id}
+                    className={`group relative ${ // Use custom cursor class conditionally
+                      project.id === 'mappy' || project.id === 'diverged' || project.id === 'iconic' ? 'cursor-add' : ''
+                    }`}
+                    // Add onClick handler conditionally
+                    onClick={() => {
+                      if (project.id === 'mappy' || project.id === 'diverged' || project.id === 'iconic') {
+                        openModal(project);
+                      }
+                    }}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="text-xl font-medium tracking-tight mb-2 mt-6 flex items-center">
@@ -439,16 +467,6 @@ export default function Home() {
                           <p className="font-light text-base leading-relaxed text-zinc-700">{project.description}</p>
                         )}
                       </div>
-                      {/* Only show the plus button for projects with media content */}
-                      {project.id === 'mappy' || project.id === 'diverged' ? (
-                        <button 
-                          onClick={() => openModal(project)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 bg-[#D81159] text-white rounded-full"
-                          aria-label={`Show details for ${project.title}`}
-                        >
-                          <IoAdd className="text-lg" />
-                        </button>
-                      ) : null}
                     </div>
                   </div>
                 ))}
@@ -456,7 +474,7 @@ export default function Home() {
             </section>
 
             <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-10">Competitions and awards</h2>
+              <h2 className="clean-heading text-3xl font-semibold mb-8">Competitions and awards</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-lg font-medium mb-2 mt-6"> IE HackEd Hackathon - DivergED</h3>
@@ -493,7 +511,7 @@ export default function Home() {
             </section>
 
             <section id="technologies" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-10">Skills and technologies</h2>
+              <h2 className="clean-heading text-3xl font-semibold mb-8">Skills and technologies</h2>
               
               <div className="space-y-6">
                 {/* Web Development Category */}
