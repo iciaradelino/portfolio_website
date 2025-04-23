@@ -30,7 +30,6 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('projects');
   const [currentPersonalImage, setCurrentPersonalImage] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  const [contentVisible, setContentVisible] = useState(false);
   const introRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -49,18 +48,26 @@ export default function Home() {
       title: "Mappy - Travel Planning Platform",
       techStack: "React • Next.js • TypeScript • Supabase",
       description: [ // Use array for bullet points
-        "Designed and built UI/UX for a travel planning website using React and Next.js.",
+        "Designed and built UI/UX for a travel planning website using React and Javascript.",
         "Built backend using TypeScript, Supabase, and Amadeus and OpenAI APIs."
       ],
       media: [{ type: 'image', src: "/images/mappy_image.png", alt: "Mappy Travel Planning Platform" }],
+    },
+    {
+      id: "victoria",
+      title: "VictorIA - IEU Robotics and AI Club",
+      techStack: "ROS • OPENCV • PYTHON",
+      description: "Programming a robotic arm (WidowX 250 S) to play Connect 4 using Python, Computer Vision (OpenCV) and ROS.",
+      media: [{ type: 'image', src: "/images/victoria_project.png", alt: "VictorIA Robotics Project" }],
       status: "In Development",
     },
     {
-      id: "diverged",
-      title: "DivergED - ADHD Learning Platform",
-      techStack: "OCR • OpenAI API • Blackboard API",
-      description: "Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.",
-      media: [{ type: 'video', src: "/images/adhd_video.mp4", alt: "ADHD Learning Platform Demo" }],
+      id: "clothing",
+      title: "Clothing Recognition Website",
+      techStack: "Python • OpenCV • YOLOv8 • Machine Learning",
+      description: "Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app...",
+      media: [{ type: 'image', src: "/images/clothing_recognition.png", alt: "AI Clothing Recognition System" }],
+      status: "In Development",
     },
     {
       id: "energy",
@@ -70,28 +77,19 @@ export default function Home() {
       media: [{ type: 'image', src: "/images/energy_prediction.png", alt: "Energy Production Prediction Model" }],
     },
     {
-      id: "victoria",
-      title: "VictorIA - IEU Robotics and AI Club",
-      techStack: "ROS • OPENCV • PYTHON",
-      description: "Programming a robotic arm (WidowX 250 S) to play Connect 4 using python, computer vision (OpenCV) and ROS.",
-      media: [{ type: 'image', src: "/images/victoria_project.png", alt: "VictorIA Robotics Project" }],
-      status: "In Development",
-    },
-    {
       id: "iconic",
       title: "Be Iconic - Fashion App",
       techStack: "REACT NATIVE • EXPO GO • SUPABASE",
       description: "Designing the UI and UX for a fashion mobile app. Building the frontend using JavaScript, React Native and Expo Go and the backend using Typescript and Supabase for users and data management.",
       media: [{ type: 'image', src: "/images/fashion_app.png", alt: "Be Iconic Fashion App" }],
-    },
+    },    
     {
-      id: "clothing",
-      title: "Clothing Recognition Website",
-      techStack: "Python • OpenCV • YOLOv8 • Machine Learning",
-      description: "Trained a computer vision model that identifies clothing items in real-time using the Fashionpedia dataset and YOLOv8 in GoogleColab. Integrated it into a fully functioning website. Currently working on an app...",
-      media: [{ type: 'image', src: "/images/clothing_recognition.png", alt: "AI Clothing Recognition System" }],
-      status: "In Development",
-    }
+      id: "diverged",
+      title: "DivergED - ADHD Learning Platform",
+      techStack: "OCR • OpenAI API • Blackboard API",
+      description: "Built a demo for a learning platform that supports students with ADHD by providing personalized study tools, study sessions scheduling, reading guidance, and integration with university course materials. Used OCR for PDF recognition, OpenAI for integrated chatbots and Blackboard API for course materials access.",
+      media: [{ type: 'video', src: "/images/adhd_video.mp4", alt: "ADHD Learning Platform Demo" }],
+    },
   ];
 
   const personalImages = [
@@ -171,27 +169,22 @@ export default function Home() {
   const [introLocked, setIntroLocked] = useState(false);
   
   // Max scroll for animation effect (adjust as needed)
-  const MAX_SCROLL = 500;
+  const MAX_SCROLL = 300;
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
       
-      // Show content after scrolling past threshold
-      if (currentScrollY > 100 && !contentVisible) {
-        setContentVisible(true);
-      }
-
       // Lock intro in final position once it reaches MAX_SCROLL
-      if (currentScrollY >= MAX_SCROLL && !introLocked) {
+      if (!introLocked && currentScrollY >= MAX_SCROLL) {
         setIntroLocked(true);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [contentVisible, introLocked, MAX_SCROLL]);
+  }, [introLocked, MAX_SCROLL]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -238,22 +231,22 @@ export default function Home() {
   // Calculate intro section transform based on scroll position
   const scrollProgress = Math.min(scrollY / MAX_SCROLL, 1);
   
-  // Determine main container alignment based on scroll position
+  // Determine main container alignment and padding based on scroll position and locked state
   const mainContainerStyle = {
-    justifyContent: introLocked ? 'flex-start' : scrollProgress > 0.8 ? 'flex-start' : 'center',
-    paddingTop: introLocked ? '10vh' : scrollProgress === 0 ? '30vh' : `${scrollProgress * 8}vh`,
-    transition: 'all 0.5s ease-out',
+    justifyContent: introLocked ? 'flex-start' : (scrollProgress > 0.9 ? 'flex-start' : 'center'), // Lock to flex-start once introLocked
+    paddingTop: introLocked ? '10vh' : `${Math.max(10, 30 - scrollProgress * 25)}vh`, // Lock padding-top once introLocked
+    transition: 'padding-top 0.5s ease-out, justify-content 0.5s ease-out', 
   };
   
   // Intro doesn't need transform - container handles positioning
   const introStyle = {
-    opacity: 1,
-    paddingTop: scrollProgress < 0.2 ? '1rem' : '0',
+    opacity: 1, // Intro is always visible
+    paddingTop: introLocked ? '0' : (scrollProgress < 0.2 ? '1rem' : '0'), // Lock padding-top once introLocked
     transition: 'padding-top 0.5s ease-out',
   };
 
-  // Determine if content should be visible (include introLocked state)
-  const shouldShowContent = contentVisible || scrollProgress > 0.3 || introLocked;
+  // Calculate content opacity based on scroll progress for fade-in effect, lock once introLocked
+  const contentOpacity = introLocked ? 1 : Math.min(Math.max((scrollProgress - 0.1) / 0.5, 0), 1);
 
   // Add this function to handle copying to clipboard
   const copyToClipboard = (email: string) => {
@@ -358,10 +351,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={`flex gap-12 transition-opacity duration-500 ease-in-out ${shouldShowContent ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div 
+          className="flex gap-12 transition-opacity duration-700 ease-out"
+          style={{ opacity: contentOpacity }} // Apply calculated opacity directly
+        >
           {/* Index Column - Hidden on mobile */}
           <nav className="hidden md:block w-48 flex-shrink-0">
-            <ul className="space-y-5 text-base sticky top-[30vh] font-light tracking-wide">
+            <ul className="space-y-5 text-base sticky top-[15vh] font-light tracking-wide">
               <li>
                 <a 
                   href="#projects" 
@@ -398,7 +394,7 @@ export default function Home() {
                       : 'hover:scale-105'
                   }`}
                 >
-                  Technologies
+                  Skills
                 </a>
               </li>
               <li>
