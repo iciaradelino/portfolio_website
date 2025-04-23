@@ -474,38 +474,52 @@ export default function Home() {
             </section>
 
             <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-8">Competitions and awards</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-2 mt-6"> IE HackEd Hackathon - DivergED</h3>
-                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">March 2025</p>
-                  <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>First place award from 20 teams </li>
-                  </ul>
-                </div>
-               
-                <div>
-                  <h3 className="text-lg font-medium mb-2 mt-6"> 2025 Tech Venture Bootcamp - Mappy</h3>
-                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">February 2025 - March 2025</p>
-                  <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>Top 5 from 20 competing teams </li>
-                  </ul>
+              <h2 className="clean-heading text-3xl font-semibold mb-16">Competitions and awards</h2>
+              {/* Timeline Container with thicker dotted line */}
+              <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
+                {/* Timeline Item 1: Google Dev Group RL */}
+                <div className="mt-6 mb-10 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
+                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
+                  </div>
+                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First Place</p>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-medium mb-2"> NTT Hackathon </h3>
-                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">February 2025</p>
-                  <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>Seventh place </li>
-                  </ul>
+                {/* Timeline Item 2: IE HackEd */}
+                <div className="mb-10 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
+                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                  </div>
+                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First place award from 20 teams</p>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-medium mb-2"> 2024 Tech Venture Bootcamp - Carlink</h3>
-                  <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">October 2024</p>
-                  <ul className="font-light text-base list-disc pl-4 space-y-2">
-                    <li>3rd place award</li>
-                  </ul>
+                {/* Timeline Item 3: Tech Venture Bootcamp - Mappy */}
+                <div className="mb-10 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
+                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                  </div>
+                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Top 5 from 20 competing teams</p>
+                </div>
+
+                {/* Timeline Item 4: NTT Hackathon */}
+                <div className="mb-10 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
+                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
+                  </div>
+                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Seventh place</p>
+                </div>
+
+                {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
+                <div className="ml-6"> {/* No mb on the last item */}
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
+                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
+                  </div>
+                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">3rd place award</p>
                 </div>
               </div>
             </section>
@@ -519,16 +533,16 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-3 mt-6">Web Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">React </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">React </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]"> Next.js </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]"> Next.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]"> Node </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]"> Tailwind CSS </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">API integrations</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">API integrations</h3>
                     </div>
                   </div>
                 </div>
@@ -538,16 +552,16 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-3">App Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">React Native</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">React Native</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Expo Go</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Expo Go</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Supabase</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Supabase</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Database Management</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]"> MongoDB </h3>
                     </div>
                   </div>
                 </div>
@@ -557,16 +571,16 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-3">Machine Learning</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">OpenCV / Computer Vision</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">OpenCV / Computer Vision</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">YOLOv8</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">YOLOv8</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">XGBoost </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">XGBoost </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Prophet</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Prophet</h3>
                     </div>
                   </div>
                 </div>
@@ -576,16 +590,16 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-3">Programming languages</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Python</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Python</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Javascript</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Javascript</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]">Typescript</h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]">Typescript</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-sm font-medium text-[#8F2D56]"> C </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]"> C </h3>
                     </div>
                   </div>
                 </div>
