@@ -12,6 +12,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Iciar's Portfolio",
   description: "Personal portfolio website",
+  icons: {
+    icon: '/favicon.ico', // Specifies the path to your favicon
+  },
 };
 
 export default function RootLayout({
