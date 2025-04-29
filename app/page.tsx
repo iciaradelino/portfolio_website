@@ -335,17 +335,6 @@ export default function Home() {
                 {copied ? 'Copied!' : 'Copy email to clipboard'}
               </span>
             </button>
-            <a 
-              href="/cv_iciar_adelino.pdf" 
-              download
-              className="group relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border-[1.5px] border-[#FFBC42] text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
-            >
-              <HiDocumentText className="text-base md:text-lg" />
-              CV
-              <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                Download file
-              </span>
-            </a>
             <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide">
               <FiMapPin className="text-base md:text-lg text-[#D81159]" />
               Based in Madrid
@@ -478,36 +467,36 @@ export default function Home() {
               {/* Timeline Container with thicker dotted line */}
               <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
                 {/* Timeline Item 1: Google Dev Group RL */}
-                <div className="mt-6 mb-10 ml-6">
+                <div className="mt-6 mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
                     <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
                   </div>
                   <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First Place</p>
                 </div>
 
                 {/* Timeline Item 2: IE HackEd */}
-                <div className="mb-10 ml-6">
+                <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
                     <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
                   <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First place award from 20 teams</p>
                 </div>
 
                 {/* Timeline Item 3: Tech Venture Bootcamp - Mappy */}
-                <div className="mb-10 ml-6">
+                <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
                     <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
                   <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Top 5 from 20 competing teams</p>
                 </div>
 
                 {/* Timeline Item 4: NTT Hackathon */}
-                <div className="mb-10 ml-6">
+                <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
                     <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
                   </div>
                   <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Seventh place</p>
@@ -516,7 +505,7 @@ export default function Home() {
                 {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
                 <div className="ml-6"> {/* No mb on the last item */}
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
                     <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
                   </div>
                   <p className="text-base font-light text-zinc-600 dark:text-zinc-400">3rd place award</p>
