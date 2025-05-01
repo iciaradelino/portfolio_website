@@ -41,6 +41,14 @@ export default function Home() {
   const [currentModalImageIndex, setCurrentModalImageIndex] = useState(0);
   const [isModalRendered, setIsModalRendered] = useState(false); // Track if modal has been rendered at least once
 
+  // State for custom cursor effect
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showPlusIcon, setShowPlusIcon] = useState(false);
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
+
+  // Projects eligible for the plus icon hover effect
+  const eligibleProjectIds = ['mappy', 'diverged', 'iconic'];
+
   // Restructured Project Data
   const projectsData: Project[] = [
     {
@@ -290,11 +298,51 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, []);
 
+  // Handlers for custom cursor effect
+  const handleMouseMove = (event: React.MouseEvent) => {
+    setMousePosition({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleMouseEnterProject = (projectId: string, event: React.MouseEvent) => {
+    if (eligibleProjectIds.includes(projectId)) {
+      setHoveredProjectId(projectId);
+      setShowPlusIcon(true);
+      handleMouseMove(event); // Initial position
+    }
+  };
+
+  const handleMouseLeaveProject = () => {
+    setHoveredProjectId(null);
+    setShowPlusIcon(false);
+  };
+
   return (
     <div 
       className="min-h-screen p-8 bg-white text-[#1d1d1f] flex flex-col" 
       style={mainContainerStyle}
+      onMouseMove={handleMouseMove} // Track mouse move globally for the icon when shown
     >
+      {/* Floating Plus Icon */}
+      {showPlusIcon && hoveredProjectId && (
+        <div 
+          className={`fixed flex items-center justify-center h-9 px-4 bg-[#D81159] rounded-full pointer-events-none shadow-md gap-2 transition-opacity transition-transform duration-300 ease-out ${showPlusIcon ? 'opacity-100' : 'opacity-0'}`} // Keep transitions
+          style={{ 
+            left: 0, // Set base position
+            top: 0,  // Set base position
+            // Use transform for smoother movement relative to top-left
+            transform: `translate(${mousePosition.x + 12}px, ${mousePosition.y + 12}px)`,
+            zIndex: 50, // Ensure it's above other elements
+            transitionDuration: '100ms, 300ms', // transform, opacity
+            transitionProperty: 'transform, opacity', // Specify properties
+            opacity: showPlusIcon ? 1 : 0, // Control opacity directly for transition
+          }} 
+        >
+          <IoAdd 
+            className="text-white text-xl" 
+          />
+          <span className="text-white text-sm font-medium">View more</span> {/* Increased text size */}
+        </div>
+      )}
       <div className="max-w-4xl mx-auto w-full relative">
         <div ref={introRef} style={introStyle} className="mb-4">
           <h1 className="clean-heading text-5xl font-semibold mb-8 text-[#1d1d1f] text-center md:text-left">
@@ -428,12 +476,15 @@ export default function Home() {
                 {projectsData.map((project) => (
                   <div
                     key={project.id}
-                    className={`group relative ${ // Use custom cursor class conditionally
-                      project.id === 'mappy' || project.id === 'diverged' || project.id === 'iconic' ? 'cursor-add' : ''
+                    className={`group relative ${ // Use standard cursor for eligible projects
+                      eligibleProjectIds.includes(project.id) ? 'cursor-pointer' : ''
                     }`}
-                    // Add onClick handler conditionally
+                    // Attach event handlers for custom effect
+                    onMouseEnter={(e) => handleMouseEnterProject(project.id, e)}
+                    onMouseLeave={handleMouseLeaveProject}
+                    // Still handle click for modal
                     onClick={() => {
-                      if (project.id === 'mappy' || project.id === 'diverged' || project.id === 'iconic') {
+                      if (eligibleProjectIds.includes(project.id)) {
                         openModal(project);
                       }
                     }}
@@ -528,7 +579,7 @@ export default function Home() {
                       <h3 className="text-base font-medium text-[#8F2D56]"> Next.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]"> Tailwind CSS </h3>
+                      <h3 className="text-base font-medium text-[#8F2D56]"> Node.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-base font-medium text-[#8F2D56]">API integrations</h3>
