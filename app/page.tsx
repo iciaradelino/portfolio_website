@@ -46,6 +46,15 @@ export default function Home() {
   const [showPlusIcon, setShowPlusIcon] = useState(false);
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
 
+  // Add state for screen size detection
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Add state for mobile menu toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Add state for conditional mobile header visibility
+  const [showMobileHeader, setShowMobileHeader] = useState(false);
+
   // Projects eligible for the plus icon hover effect
   const eligibleProjectIds = ['mappy', 'diverged', 'iconic'];
 
@@ -170,7 +179,7 @@ export default function Home() {
     }
   };
 
-  // Prevent background scrolling when modal is open and handle scrollbar width
+  // Effect for background scrolling and modal
   useEffect(() => {
     if (isModalOpen) {
       // Calculate scrollbar width and store it as a CSS variable
@@ -184,11 +193,18 @@ export default function Home() {
       document.body.classList.remove('modal-open');
     }
     
-    // Cleanup function
+    // Add logic to prevent body scroll when mobile menu is open
+    if (isMobileMenuOpen && isMobile) {
+       document.body.style.overflow = 'hidden';
+    } else {
+       document.body.style.overflow = '';
+    }
+
+    // Cleanup function for menu scroll lock
     return () => {
-      document.body.classList.remove('modal-open');
+       document.body.style.overflow = '';
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, isMobileMenuOpen, isMobile]); // Add isMobileMenuOpen and isMobile dependencies
 
   // Track if intro has reached final position
   const [introLocked, setIntroLocked] = useState(false);
@@ -198,18 +214,32 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
-      
-      // Lock intro in final position once it reaches MAX_SCROLL
-      if (!introLocked && currentScrollY >= MAX_SCROLL) {
-        setIntroLocked(true);
-      }
+      // Always track scroll and lock intro 
+      // if (!isMobile) { // REMOVED condition
+        const currentScrollY = window.scrollY;
+        setScrollY(currentScrollY);
+
+        // Lock intro in final position once it reaches MAX_SCROLL
+        if (!introLocked && currentScrollY >= MAX_SCROLL) {
+          setIntroLocked(true);
+        }
+      // }
     };
 
+    // Check initial screen size
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768); // Example breakpoint for md
+    };
+
+    checkScreenSize(); // Initial check
+    window.addEventListener('resize', checkScreenSize); // Update on resize
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [introLocked, MAX_SCROLL]);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [introLocked, MAX_SCROLL, isMobile]); // Add isMobile dependency
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -232,6 +262,26 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const introElement = introRef.current;
+    if (!introElement) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show header when intro is NOT intersecting (scrolled past)
+        setShowMobileHeader(!entry.isIntersecting);
+      },
+      { 
+        rootMargin: '-100px 0px 0px 0px', // Trigger slightly before it's fully out of view
+        threshold: 0 
+      }
+    );
+
+    observer.observe(introElement);
+
+    return () => observer.disconnect();
+  }, []); // Run only once on mount
+
   // Handle smooth scrolling to sections
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string): void => {
     e.preventDefault();
@@ -253,24 +303,33 @@ export default function Home() {
     }
   };
 
+  // Mobile-specific navigation click handler
+  const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string): void => {
+    handleNavClick(e, sectionId); // Reuse existing scroll logic
+    setIsMobileMenuOpen(false); // Close menu after clicking a link
+  };
+
   // Calculate intro section transform based on scroll position
   const scrollProgress = Math.min(scrollY / MAX_SCROLL, 1);
-  
+
   // Determine main container alignment and padding based on scroll position and locked state
   const mainContainerStyle = {
+    // Revert to original dynamic styles for all screen sizes
     justifyContent: introLocked ? 'flex-start' : (scrollProgress > 0.9 ? 'flex-start' : 'center'), // Lock to flex-start once introLocked
     paddingTop: introLocked ? '10vh' : `${Math.max(10, 30 - scrollProgress * 25)}vh`, // Lock padding-top once introLocked
-    transition: 'padding-top 0.5s ease-out, justify-content 0.5s ease-out', 
+    transition: 'padding-top 0.5s ease-out, justify-content 0.5s ease-out', // Re-enable transition for all
   };
-  
+
   // Intro doesn't need transform - container handles positioning
   const introStyle = {
     opacity: 1, // Intro is always visible
+    // Revert to original dynamic styles for all screen sizes
     paddingTop: introLocked ? '0' : (scrollProgress < 0.2 ? '1rem' : '0'), // Lock padding-top once introLocked
-    transition: 'padding-top 0.5s ease-out',
+    transition: 'padding-top 0.5s ease-out', // Re-enable transition for all
   };
 
   // Calculate content opacity based on scroll progress for fade-in effect, lock once introLocked
+  // Revert to original dynamic calculation for all screen sizes
   const contentOpacity = introLocked ? 1 : Math.min(Math.max((scrollProgress - 0.1) / 0.5, 0), 1);
 
   // Add this function to handle copying to clipboard
@@ -300,18 +359,24 @@ export default function Home() {
 
   // Handlers for custom cursor effect
   const handleMouseMove = (event: React.MouseEvent) => {
-    setMousePosition({ x: event.clientX, y: event.clientY });
+    // Only update position if the icon should be shown (and not on mobile)
+    if (!isMobile && showPlusIcon) {
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    }
   };
 
   const handleMouseEnterProject = (projectId: string, event: React.MouseEvent) => {
-    if (eligibleProjectIds.includes(projectId)) {
+    // Only trigger hover effect if not on mobile and eligible
+    if (!isMobile && eligibleProjectIds.includes(projectId)) {
       setHoveredProjectId(projectId);
       setShowPlusIcon(true);
-      handleMouseMove(event); // Initial position
+      // Set initial position immediately on enter
+      setMousePosition({ x: event.clientX, y: event.clientY });
     }
   };
 
   const handleMouseLeaveProject = () => {
+    // Always reset hover state on leave, regardless of mobile status
     setHoveredProjectId(null);
     setShowPlusIcon(false);
   };
@@ -320,12 +385,47 @@ export default function Home() {
     <div 
       className="min-h-screen p-8 bg-white text-[#1d1d1f] flex flex-col" 
       style={mainContainerStyle}
-      onMouseMove={handleMouseMove} // Track mouse move globally for the icon when shown
+      // Only track mouse move for the effect if not on mobile
+      onMouseMove={!isMobile ? handleMouseMove : undefined}
     >
-      {/* Floating Plus Icon */}
-      {showPlusIcon && hoveredProjectId && (
+      {/* Mobile Header - Appears on scroll */}
+      <header className={`md:hidden fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm shadow-sm p-4 z-50 flex justify-end items-center transition-transform duration-300 ease-in-out ${isMobile && showMobileHeader ? 'translate-y-0' : '-translate-y-full'}`}>
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          className="z-50 text-2xl" // Ensure button is clickable above backdrop
+        >
+          {isMobileMenuOpen ? <IoClose /> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}> <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" /> </svg>}
+        </button>
+      </header>
+
+      {/* Mobile Menu Panel - Slides from top, short, right-aligned */}
+      <div 
+        className={`md:hidden fixed top-16 right-4 w-auto h-auto bg-white rounded-md z-40 px-6 py-4 shadow-md transition-transform duration-300 ease-in-out transform origin-top-right ${isMobileMenuOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`}
+      >
+        <nav>
+          {/* Align items to the end (right) */}
+          <ul className="flex flex-col items-end space-y-3 text-base font-medium">
+             <li>
+                <a href="#projects" onClick={(e) => handleMobileNavClick(e, 'projects')} className="block py-1 hover:text-[#D81159]">Projects</a>
+              </li>
+              <li>
+                <a href="#experience" onClick={(e) => handleMobileNavClick(e, 'experience')} className="block py-1 hover:text-[#D81159]">Competitions</a>
+              </li>
+              <li>
+                <a href="#technologies" onClick={(e) => handleMobileNavClick(e, 'technologies')} className="block py-1 hover:text-[#D81159]">Skills</a>
+              </li>
+              <li>
+                <a href="#about" onClick={(e) => handleMobileNavClick(e, 'about')} className="block py-1 hover:text-[#D81159]">About Me</a>
+              </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Floating Plus Icon - Conditionally render based on state AND !isMobile */}
+      {!isMobile && showPlusIcon && hoveredProjectId && (
         <div 
-          className={`fixed flex items-center justify-center h-9 px-4 bg-[#D81159] rounded-full pointer-events-none shadow-md gap-2 transition-opacity transition-transform duration-300 ease-out ${showPlusIcon ? 'opacity-100' : 'opacity-0'}`} // Keep transitions
+          className={`fixed flex items-center justify-center h-9 px-4 bg-[#D81159] rounded-full pointer-events-none shadow-md gap-2 transition-opacity transition-transform duration-300 ease-out ${showPlusIcon ? 'opacity-100' : 'opacity-0'}`}
           style={{ 
             left: 0, // Set base position
             top: 0,  // Set base position
@@ -336,6 +436,7 @@ export default function Home() {
             transitionProperty: 'transform, opacity', // Specify properties
             opacity: showPlusIcon ? 1 : 0, // Control opacity directly for transition
           }} 
+          onMouseLeave={handleMouseLeaveProject}
         >
           <IoAdd 
             className="text-white text-xl" 
@@ -345,51 +446,56 @@ export default function Home() {
       )}
       <div className="max-w-4xl mx-auto w-full relative">
         <div ref={introRef} style={introStyle} className="mb-4">
-          <h1 className="clean-heading text-5xl font-semibold mb-8 text-[#1d1d1f] text-center md:text-left">
+          <h1 className="clean-heading text-4xl md:text-5xl font-semibold mb-8 text-[#1d1d1f] text-left">
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
           <div className="mb-10">
-            <p className="text-xl leading-relaxed font-light tracking-tight text-center md:text-left mt-6">
+            {/* Full Description for larger screens */}
+            <p className="text-lg md:text-xl leading-relaxed font-light tracking-tight text-left mt-6 hidden md:block">
               Welcome to my portfolio website. I am a Computer Science and Artificial Intelligence student with an insatiable curiosity and a true passion for learning. I have hands-on experience in web and app development as well as machine learning models. I also have some background in the startup industry with several prizes in entrepreneurial competitions. I am especially interested in robotics and exploring the intersection between the virtual and physical world. I am open to new opportunities!
+            </p>
+            {/* Shorter Description for mobile screens */}
+            <p className="text-base md:text-lg leading-relaxed font-light tracking-tight text-left mt-6 block md:hidden">
+              I'm a CompSci & AI student passionate about web/app development, ML, and robotics. Experienced in startups and eager for new opportunities.
             </p>
           </div>
 
-          <div className="flex gap-4 mb-12 justify-center md:justify-start flex-wrap">
-            <a 
-              href="https://github.com/iciaradelino" 
+          <div className="flex gap-3 md:gap-4 mb-12 justify-start flex-wrap">
+            <a
+              href="https://github.com/iciaradelino"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#D81159] text-white rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#D81159] text-white rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <FaGithub className="text-base md:text-lg" />
+              <FaGithub className="text-sm md:text-lg" />
               GitHub
             </a>
             <a
-              href="https://www.linkedin.com/in/ic%C3%ADar-adeli%C3%B1o-219b53331/?trk=opento_sprofile_topcard" 
+              href="https://www.linkedin.com/in/ic%C3%ADar-adeli%C3%B1o-219b53331/?trk=opento_sprofile_topcard"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#8F2D56] text-white rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#8F2D56] text-white rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <FaLinkedin className="text-base md:text-lg" />
+              <FaLinkedin className="text-sm md:text-lg" />
               LinkedIn
             </a>
-            <button 
+            <button
               onClick={() => copyToClipboard('iciaradelinoordax@gmail.com')}
-              className="group relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="group relative flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
-              <HiMail className="text-base md:text-lg" />
+              <HiMail className="text-sm md:text-lg" />
               Email
               <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 {copied ? 'Copied!' : 'Copy email to clipboard'}
               </span>
             </button>
-            <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-[14px] md:text-[15px] font-normal tracking-wide">
-              <FiMapPin className="text-base md:text-lg text-[#D81159]" />
+            <div className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-sm md:text-[15px] font-normal tracking-wide">
+              <FiMapPin className="text-sm md:text-lg text-[#D81159]" />
               Based in Madrid
             </div>
           </div>
           
-          {/* Scroll down indicator - only visible when scrollY is 0 AND intro is not locked */}
+          {/* Scroll down indicator - only visible when scrollY is 0 AND intro is not locked - Re-enable for mobile */}
           <div className={`flex flex-col items-center justify-center transition-opacity duration-300 ${(scrollY > 0 || introLocked) ? 'opacity-0' : 'opacity-70'}`}>
             <svg 
               className="w-6 h-6 text-gray-500 animate-bounce" 
@@ -411,7 +517,7 @@ export default function Home() {
         >
           {/* Index Column - Hidden on mobile */}
           <nav className="hidden md:block w-48 flex-shrink-0">
-            <ul className="space-y-5 text-base sticky top-[15vh] font-light tracking-wide">
+            <ul className="space-y-5 text-sm md:text-base sticky top-[15vh] font-light tracking-wide">
               <li>
                 <a 
                   href="#projects" 
@@ -470,7 +576,7 @@ export default function Home() {
           {/* Content Column - Full width on mobile */}
           <div className="flex-1 space-y-12 max-w-2xl w-full">
             <section id="projects" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-8 tracking-tight">Projects</h2>
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8 tracking-tight">Projects</h2>
               <div className="space-y-8">
                 {/* Map through projectsData */}
                 {projectsData.map((project) => (
@@ -482,29 +588,29 @@ export default function Home() {
                     // Attach event handlers for custom effect
                     onMouseEnter={(e) => handleMouseEnterProject(project.id, e)}
                     onMouseLeave={handleMouseLeaveProject}
-                    // Still handle click for modal
+                    // Still handle click for modal, but only if not mobile
                     onClick={() => {
-                      if (eligibleProjectIds.includes(project.id)) {
+                      if (!isMobile && eligibleProjectIds.includes(project.id)) {
                         openModal(project);
                       }
                     }}
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-xl font-medium tracking-tight mb-2 mt-6 flex items-center">
+                        <h3 className="text-lg md:text-xl font-medium tracking-tight mb-2 mt-6 flex items-center">
                           {project.title}
                           {project.status && (
-                            <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded">{project.status}</span>
+                            <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded whitespace-nowrap flex-shrink-0">{project.status}</span>
                           )}
                         </h3>
-                        <p className="text-[#8F2D56] mb-3 font-light text-sm tracking-wider uppercase">{project.techStack}</p>
+                        <p className="text-[#8F2D56] mb-3 font-light text-xs md:text-sm tracking-wider uppercase">{project.techStack}</p>
                         {/* Handle description: single string or array */}
                         {Array.isArray(project.description) ? (
                           project.description.map((descPoint, index) => (
-                            <p key={index} className="font-light text-base leading-relaxed text-zinc-700"> • {descPoint}</p>
+                            <p key={index} className="font-light text-sm md:text-base leading-relaxed text-zinc-700"> • {descPoint}</p>
                           ))
                         ) : (
-                          <p className="font-light text-base leading-relaxed text-zinc-700">{project.description}</p>
+                          <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">{project.description}</p>
                         )}
                       </div>
                     </div>
@@ -514,132 +620,132 @@ export default function Home() {
             </section>
 
             <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-16">Competitions and awards</h2>
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-16">Competitions and awards</h2>
               {/* Timeline Container with thicker dotted line */}
               <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
                 {/* Timeline Item 1: Google Dev Group RL */}
                 <div className="mt-6 mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
-                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
                   </div>
-                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First Place</p>
+                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">First Place</p>
                 </div>
 
                 {/* Timeline Item 2: IE HackEd */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
-                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
-                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">First place award from 20 teams</p>
+                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">First place award from 20 teams</p>
                 </div>
 
                 {/* Timeline Item 3: Tech Venture Bootcamp - Mappy */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
-                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
-                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Top 5 from 20 competing teams</p>
+                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">Top 5 from 20 competing teams</p>
                 </div>
 
                 {/* Timeline Item 4: NTT Hackathon */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
-                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
                   </div>
-                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">Seventh place</p>
+                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">Seventh place</p>
                 </div>
 
                 {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
                 <div className="ml-6"> {/* No mb on the last item */}
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
-                    <p className="text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
                   </div>
-                  <p className="text-base font-light text-zinc-600 dark:text-zinc-400">3rd place award</p>
+                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">3rd place award</p>
                 </div>
               </div>
             </section>
 
             <section id="technologies" className="scroll-mt-8">
-              <h2 className="clean-heading text-3xl font-semibold mb-8">Skills and technologies</h2>
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">Skills and technologies</h2>
               
               <div className="space-y-6">
                 {/* Web Development Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3 mt-6">Web Development</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-3 mt-6">Web Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">React </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">React </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]"> Next.js </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]"> Next.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]"> Node.js </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]"> Node.js </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">API integrations</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">API integrations</h3>
                     </div>
                   </div>
                 </div>
 
                 {/* App deevelopment Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">App Development</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-3">App Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">React Native</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">React Native</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Expo Go</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Expo Go</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Supabase</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Supabase</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]"> MongoDB </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]"> MongoDB </h3>
                     </div>
                   </div>
                 </div>
                 
                 {/* AI & Machine Learning Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Machine Learning</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-3">Machine Learning</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">OpenCV / Computer Vision</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Computer Vision</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">YOLOv8</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">YOLOv8</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">XGBoost </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">XGBoost </h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Prophet</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Prophet</h3>
                     </div>
                   </div>
                 </div>
                 
                 {/* Programming languages Category */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Programming languages</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-3">Programming languages</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Python</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Python</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Javascript</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Javascript</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]">Typescript</h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Typescript</h3>
                     </div>
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-base font-medium text-[#8F2D56]"> C </h3>
+                      <h3 className="text-sm md:text-base font-medium text-[#8F2D56]"> C </h3>
                     </div>
                   </div>
                 </div>
@@ -648,8 +754,8 @@ export default function Home() {
             </section>
 
             <section id="about" className="scroll-mt-8 mb-16">
-              <h2 className="clean-heading text-3xl font-semibold mb-10">About Me</h2>
-              <p className="text-lg font-light leading-relaxed mb-10 mt-6">
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-10">About Me</h2>
+              <p className="text-base md:text-lg font-light leading-relaxed mb-10 mt-6">
                 I'm a very curious and active person, always looking to get out of my comfort zone, try new things and meet new people. 
                 Besides from coding and academics, I love doing adrenaline-rushing sports. Currently I really enjoy climbing, padel and horserding. 
               </p>
@@ -715,22 +821,22 @@ export default function Home() {
               {/* Modal Content */}
               <h3 
                 id="project-modal-title" 
-                className="clean-heading text-2xl font-semibold mb-6 text-[#1d1d1f]"
+                className="clean-heading text-xl md:text-2xl font-semibold mb-6 text-[#1d1d1f]"
               >
                 {selectedProject.title}
               </h3>
-              <p className="text-[#8F2D56] mt-2 mb-4 font-light text-sm tracking-wider uppercase font-inter">{selectedProject.techStack}</p>
+              <p className="text-[#8F2D56] mt-2 mb-4 font-light text-xs md:text-sm tracking-wider uppercase font-inter">{selectedProject.techStack}</p>
 
               {/* Description */}
               <div className="mb-6 prose prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 font-inter">
                 {Array.isArray(selectedProject.description) ? (
-                  <ul className="list-disc pl-5 space-y-1 font-light">
+                  <ul className="list-disc pl-5 space-y-1 font-light text-sm md:text-base">
                     {selectedProject.description.map((descPoint, index) => (
                       <li key={index}>{descPoint}</li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="font-light text-base leading-relaxed">{selectedProject.description}</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed">{selectedProject.description}</p>
                 )}
               </div>
 
