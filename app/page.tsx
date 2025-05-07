@@ -56,15 +56,27 @@ export default function Home() {
   const [showMobileHeader, setShowMobileHeader] = useState(false);
 
   // Projects eligible for the plus icon hover effect
-  const eligibleProjectIds = ['mappy', 'diverged', 'iconic'];
+  const eligibleProjectIds = ['mappy', 'diverged', 'iconic', 'climbr'];
 
   // Restructured Project Data
   const projectsData: Project[] = [
     {
+      id: "climbr",
+      title: "Climbr - Social Media App for Climbers",
+      techStack: "React Native • Expo Go • MongoDB • Flask",
+      description: [
+        "Developed the frontend and backend for a social media application tailored for climbers.",
+        "Features include post sharing, user profiles, workout tracking, and following other climbers.",
+        "Currently deployed to the Play Store for internal testing, with a full public release planned soon."
+      ],
+      media: [{ type: 'video', src: "/images/climbr_video.mp4", alt: "Climbr App Video Demo" }],
+      status: "In Development",
+    },
+    {
       id: "mappy",
       title: "Mappy - Travel Planning Platform",
       techStack: "React • Next.js • TypeScript • Supabase",
-      description: [ // Use array for bullet points
+      description: [ 
         "Designed and implemented the UI/UX for a travel planning web application using React and JavaScript.",
         "Developed the backend infrastructure utilizing TypeScript, Supabase, and integrated Amadeus and OpenAI APIs for enhanced functionality."
       ],
@@ -75,7 +87,7 @@ export default function Home() {
       title: "VictorIA - IEU Robotics and AI Club",
       techStack: "ROS • OPENCV • PYTHON",
       description: [
-        "Programmed a WidowX 250 S robotic arm to play Connect 4.",
+        "Programming a WidowX 250 S robotic arm to play Connect 4.",
         "Utilized Python, Computer Vision (OpenCV), and Robot Operating System (ROS) for control and perception."
       ],
       media: [{ type: 'image', src: "/images/victoria_project.png", alt: "VictorIA Robotics Project" }],
@@ -113,16 +125,6 @@ export default function Home() {
           "Developed the backend with TypeScript and Supabase for user authentication and data management."
       ],
       media: [{ type: 'video', src: "/images/beiconic.mp4", alt: "Be Iconic Fashion App" }],
-    },
-    {
-      id: "diverged",
-      title: "DivergED - ADHD Learning Platform",
-      techStack: "OCR • OpenAI API • Blackboard API",
-      description: [
-        "Developed a demo for an ADHD-focused learning platform offering personalized study tools and scheduling.",
-        "Integrated OCR for PDF processing, OpenAI for chatbot features, and the Blackboard API for course material access."
-      ],
-      media: [{ type: 'video', src: "/images/adhd_video.mp4", alt: "ADHD Learning Platform Demo" }],
     },
   ];
 
