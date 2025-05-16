@@ -55,6 +55,9 @@ export default function Home() {
   // Add state for conditional mobile header visibility
   const [showMobileHeader, setShowMobileHeader] = useState(false);
 
+  // State for intro animation
+  const [startIntroAnimation, setStartIntroAnimation] = useState(false);
+
   // Projects eligible for the plus icon hover effect
   const eligibleProjectIds = ['mappy', 'diverged', 'iconic', 'climbr'];
 
@@ -213,6 +216,14 @@ export default function Home() {
   
   // Max scroll for animation effect (adjust as needed)
   const MAX_SCROLL = 300;
+
+  // Effect to trigger intro animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setStartIntroAnimation(true);
+    }, 100); // Short delay to ensure initial state is rendered before animation starts
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -448,10 +459,10 @@ export default function Home() {
       )}
       <div className="max-w-4xl mx-auto w-full relative">
         <div ref={introRef} style={introStyle} className="mb-4">
-          <h1 className="clean-heading text-4xl md:text-5xl font-semibold mb-8 text-[#1d1d1f] text-left">
+          <h1 className={`clean-heading text-4xl md:text-5xl font-semibold mb-8 text-[#1d1d1f] text-left transform transition-all ease-out duration-700 delay-100 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
-          <div className="mb-10">
+          <div className={`mb-10 transform transition-all ease-out duration-700 delay-200 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Full Description for larger screens */}
             <p className="text-lg md:text-xl leading-relaxed font-light tracking-tight text-left mt-6 hidden md:block">
               Welcome to my portfolio website. I am a Computer Science and Artificial Intelligence student with an insatiable curiosity and a true passion for learning. I have hands-on experience in web and app development as well as machine learning models. I also have some background in the startup industry with several prizes in entrepreneurial competitions. I am especially interested in robotics and exploring the intersection between the virtual and physical world. I am open to new opportunities!
@@ -462,7 +473,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex gap-3 md:gap-4 mb-12 justify-start flex-wrap">
+          <div className={`flex gap-3 md:gap-4 mb-12 justify-start flex-wrap transform transition-all ease-out duration-700 delay-300 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <a
               href="https://github.com/iciaradelino"
               target="_blank"
@@ -498,7 +509,7 @@ export default function Home() {
           </div>
           
           {/* Scroll down indicator - only visible when scrollY is 0 AND intro is not locked - Re-enable for mobile */}
-          <div className={`flex flex-col items-center justify-center transition-opacity duration-300 ${(scrollY > 0 || introLocked) ? 'opacity-0' : 'opacity-70'}`}>
+          <div className={`flex flex-col items-center justify-center transform transition-all ease-out duration-700 delay-400 ${startIntroAnimation ? `translate-y-0 ${(scrollY > 0 || introLocked) ? 'opacity-0' : 'opacity-70'}` : 'opacity-0 translate-y-10'}`}>
             <svg 
               className="w-6 h-6 text-gray-500 animate-bounce" 
               fill="none" 
