@@ -61,21 +61,37 @@ body.modal-open .fixed {
 }
 
 /* Carousel animation */
-@keyframes carousel {
+@keyframes carousel-desktop {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-280px * 9 - 1rem * 8)); /* Width of all images + gap between them */
+    transform: translateX(calc(-224px * 9 - 1rem * 8)); /* Scaled for desktop */
   }
 }
 
-.animate-carousel {
-  animation: carousel 40s linear infinite;
+.animate-carousel-desktop {
+  animation: carousel-desktop 40s linear infinite;
 }
 
-/* Add hover pause effect */
-.animate-carousel:hover {
+.animate-carousel-desktop:hover {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-mobile {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-280px * 9 - 1rem * 8)); /* Original for mobile */
+  }
+}
+
+.animate-carousel-mobile {
+  animation: carousel-mobile 40s linear infinite;
+}
+
+.animate-carousel-mobile:hover {
   animation-play-state: paused;
 }
 
@@ -114,4 +130,10 @@ body.modal-open .fixed {
 .cursor-add {
   /* SVG: Pink circle background (r=11), white plus sign (stroke=1.5) */
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="%23D81159"/><path d="M12 7V17M7 12H17" stroke="%23FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') 12 12, pointer;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 80%;
+  }
 }

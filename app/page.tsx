@@ -58,6 +58,8 @@ export default function Home() {
   // State for intro animation
   const [startIntroAnimation, setStartIntroAnimation] = useState(false);
 
+  const animationFrameId = useRef<number | null>(null);
+
   // Projects eligible for the plus icon hover effect
   const eligibleProjectIds = ['mappy', 'diverged', 'iconic', 'climbr'];
 
@@ -215,7 +217,7 @@ export default function Home() {
   const [introLocked, setIntroLocked] = useState(false);
   
   // Max scroll for animation effect (adjust as needed)
-  const MAX_SCROLL = 300;
+  const MAX_SCROLL = isMobile ? 300 : 240;
 
   // Effect to trigger intro animation
   useEffect(() => {
@@ -285,7 +287,7 @@ export default function Home() {
         setShowMobileHeader(!entry.isIntersecting);
       },
       { 
-        rootMargin: '-100px 0px 0px 0px', // Trigger slightly before it's fully out of view
+        rootMargin: isMobile ? '-100px 0px 0px 0px' : '-80px 0px 0px 0px', // Trigger slightly before it's fully out of view
         threshold: 0 
       }
     );
@@ -304,7 +306,7 @@ export default function Home() {
       const viewportHeight = window.innerHeight;
       const sectionHeight = section.getBoundingClientRect().height;
       const offset = (viewportHeight - sectionHeight) / 3;
-      const targetPosition = section.offsetTop - Math.max(offset, 50);
+      const targetPosition = section.offsetTop - Math.max(offset, isMobile ? 50 : 40);
 
       window.scrollTo({
         top: targetPosition,
@@ -350,7 +352,7 @@ export default function Home() {
     navigator.clipboard.writeText(email)
       .then(() => {
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+        setTimeout(() => setCopied(false), isMobile ? 2000 : 1600); // Reset after 2 seconds
       })
       .catch(err => {
         console.error('Failed to copy: ', err);
@@ -365,7 +367,7 @@ export default function Home() {
     // Start automatic scroll after 1 second
     const timeout = setTimeout(() => {
       setIsCarouselAnimating(true);
-    }, 1000);
+    }, isMobile ? 1000 : 800);
     
     return () => clearTimeout(timeout);
   }, []);
@@ -374,7 +376,12 @@ export default function Home() {
   const handleMouseMove = (event: React.MouseEvent) => {
     // Only update position if the icon should be shown (and not on mobile)
     if (!isMobile && showPlusIcon) {
-      setMousePosition({ x: event.clientX, y: event.clientY });
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+      animationFrameId.current = requestAnimationFrame(() => {
+        setMousePosition({ x: event.clientX, y: event.clientY });
+      });
     }
   };
 
@@ -393,6 +400,15 @@ export default function Home() {
     setHoveredProjectId(null);
     setShowPlusIcon(false);
   };
+
+  useEffect(() => {
+    // Cleanup function to cancel animation frame if component unmounts
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+  }, []); // Empty dependency array ensures this runs on mount and unmount
 
   return (
     <div 
@@ -443,9 +459,9 @@ export default function Home() {
             left: 0, // Set base position
             top: 0,  // Set base position
             // Use transform for smoother movement relative to top-left
-            transform: `translate(${mousePosition.x + 12}px, ${mousePosition.y + 12}px)`,
+            transform: `translate(${mousePosition.x + (isMobile ? 12 : 9.6)}px, ${mousePosition.y + (isMobile ? 12 : 9.6)}px)`,
             zIndex: 50, // Ensure it's above other elements
-            transitionDuration: '100ms, 300ms', // transform, opacity
+            transitionDuration: '75ms, 300ms', // transform, opacity
             transitionProperty: 'transform, opacity', // Specify properties
             opacity: showPlusIcon ? 1 : 0, // Control opacity directly for transition
           }} 
@@ -478,7 +494,7 @@ export default function Home() {
               href="https://github.com/iciaradelino"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#D81159] text-white rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#D81159] text-white rounded-full text-sm md:text-[12px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
               <FaGithub className="text-sm md:text-lg" />
               GitHub
@@ -487,14 +503,14 @@ export default function Home() {
               href="https://www.linkedin.com/in/ic%C3%ADar-adeli%C3%B1o-219b53331/?trk=opento_sprofile_topcard"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#8F2D56] text-white rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#8F2D56] text-white rounded-full text-sm md:text-[12px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
               <FaLinkedin className="text-sm md:text-lg" />
               LinkedIn
             </a>
             <button
               onClick={() => copyToClipboard('iciaradelinoordax@gmail.com')}
-              className="group relative flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-sm md:text-[15px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
+              className="group relative flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-[#FFBC42] text-[#1d1d1f] rounded-full text-sm md:text-[12px] font-normal tracking-wide transition-all duration-200 hover:scale-110"
             >
               <HiMail className="text-sm md:text-lg" />
               Email
@@ -502,7 +518,7 @@ export default function Home() {
                 {copied ? 'Copied!' : 'Copy email to clipboard'}
               </span>
             </button>
-            <div className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-sm md:text-[15px] font-normal tracking-wide">
+            <div className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gray-100 text-[#1d1d1f] rounded-full text-sm md:text-[12px] font-normal tracking-wide">
               <FiMapPin className="text-sm md:text-lg text-[#D81159]" />
               Based in Madrid
             </div>
@@ -515,7 +531,7 @@ export default function Home() {
               fill="none" 
               strokeLinecap="round" 
               strokeLinejoin="round" 
-              strokeWidth="2" 
+              strokeWidth={isMobile ? "2" : "1.6"}
               viewBox="0 0 24 24" 
               stroke="currentColor"
             >
@@ -776,7 +792,7 @@ export default function Home() {
               <div className="mt-6 w-full overflow-hidden relative mb-10">
                 <div 
                   ref={carouselRef}
-                  className={`flex gap-2 md:gap-4 py-4 ${isCarouselAnimating ? 'animate-carousel' : ''}`}
+                  className={`flex gap-2 md:gap-4 py-4 ${isCarouselAnimating ? (isMobile ? 'animate-carousel-mobile' : 'animate-carousel-desktop') : ''}`}
                   style={{
                     width: 'fit-content',
                   }}
@@ -786,8 +802,8 @@ export default function Home() {
                       key={index} 
                       className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
                       style={{ 
-                        width: '200px',
-                        height: '150px',
+                        width: isMobile ? '200px' : '160px',
+                        height: isMobile ? '150px' : '120px',
                         background: 'white'
                       }}
                     >
