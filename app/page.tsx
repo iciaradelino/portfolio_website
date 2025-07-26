@@ -26,6 +26,17 @@ interface Project {
   status?: 'In Development'; // Optional status
 }
 
+// Define a type for experience data
+interface Experience {
+  id: string;
+  company: string;
+  role: string;
+  website: string;
+  demoLink?: string;
+  date: string;
+  description: string | string[];
+}
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState('projects');
   const [currentPersonalImage, setCurrentPersonalImage] = useState(0);
@@ -130,6 +141,52 @@ export default function Home() {
           "Developed the backend with TypeScript and Supabase for user authentication and data management."
       ],
       media: [{ type: 'video', src: "/images/beiconic.mp4", alt: "Be Iconic Fashion App" }],
+    },
+  ];
+
+  // Experience Data
+  const experienceData: Experience[] = [
+    {
+      id: 'huuh',
+      company: 'huuh.me',
+      role: 'Software Engineering Intern',
+      website: 'https://huuh.me/',
+      date: 'June – July 2025',
+      description: [
+        'A platform for building AI-powered knowledge bases with minimal hallucination. I worked on implementing multimodal RAG capabilities and image processing pipelines across both backend and frontend systems, as well as other feature implementations.',
+      ],
+    },
+    {
+      id: 'rentee',
+      company: 'Rentee',
+      role: 'Software Engineering Intern',
+      website: 'https://www.rentee.es/',
+      demoLink: 'https://rentee-managersuite-demo-frontend.vercel.app/analytics',
+      date: 'June – July 2025',
+      description: [
+        'A financial management platform for vacation property owners, Rentee Owner Suite. I built the company\'s second platform from scratch, Rentee Manager Suite, to help property managers organize and analyze their clients\' financial data. I was responsible for the backend architecture, database design, and frontend user experience. A live demo of the platform is available here: ',
+      ],
+    },
+    {
+      id: 'frontier',
+      company: 'Frontier Diagnostics',
+      role: 'Frontend App Developer',
+      website: 'https://frontierdiagnostics.net/',
+      demoLink: '/images/frontier_video.mp4',
+      date: 'June 2025',
+      description: [
+        'Developed a mobile application for Frontier Diagnostics, a breast cancer diagnostics company specializing in personalized treatments. The app keeps patients informed with key updates like appointments and signing documents, and offers an anonymous social space for support and connection during treatment.',
+      ],
+    },
+    {
+      id: 'freelance',
+      company: 'Freelance',
+      role: 'Freelance Web Developer',
+      website: '#',
+      date: 'March 2025 – Present',
+      description: [
+        'Offering freelance web design and development services for clients seeking high-end, custom websites. I specialize in React and Next.js to build visually compelling, high-converting websites.',
+      ],
     },
   ];
 
@@ -435,11 +492,14 @@ export default function Home() {
         <nav>
           {/* Align items to the end (right) */}
           <ul className="flex flex-col items-end space-y-3 text-base font-medium">
-             <li>
+            <li>
+                <a href="#experience" onClick={(e) => handleMobileNavClick(e, 'experience')} className="block py-1 hover:text-[#D81159]">Experience</a>
+              </li>
+              <li>
                 <a href="#projects" onClick={(e) => handleMobileNavClick(e, 'projects')} className="block py-1 hover:text-[#D81159]">Projects</a>
               </li>
               <li>
-                <a href="#experience" onClick={(e) => handleMobileNavClick(e, 'experience')} className="block py-1 hover:text-[#D81159]">Competitions</a>
+                <a href="#competitions" onClick={(e) => handleMobileNavClick(e, 'competitions')} className="block py-1 hover:text-[#D81159]">Competitions</a>
               </li>
               <li>
                 <a href="#technologies" onClick={(e) => handleMobileNavClick(e, 'technologies')} className="block py-1 hover:text-[#D81159]">Skills</a>
@@ -478,18 +538,18 @@ export default function Home() {
           <h1 className={`clean-heading text-4xl md:text-5xl font-semibold mb-8 text-[#1d1d1f] text-left transform transition-all ease-out duration-700 delay-100 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Hi, I am <span className="gradient-text">Iciar</span>!
           </h1>
-          <div className={`mb-10 transform transition-all ease-out duration-700 delay-200 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`mb-8 transform transition-all ease-out duration-700 delay-200 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Full Description for larger screens */}
-            <p className="text-lg md:text-xl leading-relaxed font-light tracking-tight text-left mt-6 hidden md:block">
+            <p className="text-lg md:text-xl leading-relaxed font-light tracking-tight text-left hidden md:block">
               Welcome to my portfolio website. I am a Computer Science and Artificial Intelligence student with an insatiable curiosity and a true passion for learning. I have hands-on experience in web and app development as well as machine learning models. I also have some background in the startup industry with several prizes in entrepreneurial competitions. I am especially interested in robotics and exploring the intersection between the virtual and physical world. I am open to new opportunities!
             </p>
             {/* Shorter Description for mobile screens */}
-            <p className="text-base md:text-lg leading-relaxed font-light tracking-tight text-left mt-6 block md:hidden">
+            <p className="text-base md:text-lg leading-relaxed font-light tracking-tight text-left block md:hidden">
               I'm a CompSci & AI student passionate about web/app development, ML, and robotics. Experienced in startups and eager for new opportunities.
             </p>
           </div>
 
-          <div className={`flex gap-3 md:gap-4 mb-12 justify-start flex-wrap transform transition-all ease-out duration-700 delay-300 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`flex gap-3 md:gap-4 mb-8 justify-start flex-wrap transform transition-all ease-out duration-700 delay-300 ${startIntroAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <a
               href="https://github.com/iciaradelino"
               target="_blank"
@@ -546,7 +606,20 @@ export default function Home() {
         >
           {/* Index Column - Hidden on mobile */}
           <nav className="hidden md:block w-48 flex-shrink-0">
-            <ul className="space-y-5 text-sm md:text-base sticky top-[15vh] font-light tracking-wide">
+            <ul className="space-y-6 text-sm md:text-base sticky top-[15vh] font-light tracking-wide">
+              <li>
+                <a 
+                  href="#experience" 
+                  onClick={(e) => handleNavClick(e, 'experience')}
+                  className={`transition-all duration-200 block ${
+                    activeSection === 'experience' 
+                      ? 'text-[#D81159] font-semibold' 
+                      : 'hover:scale-105'
+                  }`}
+                >
+                  Experience
+                </a>
+              </li>
               <li>
                 <a 
                   href="#projects" 
@@ -562,15 +635,15 @@ export default function Home() {
               </li>
               <li>
                 <a 
-                  href="#experience" 
-                  onClick={(e) => handleNavClick(e, 'experience')}
+                  href="#competitions" 
+                  onClick={(e) => handleNavClick(e, 'competitions')}
                   className={`transition-all duration-200 block ${
-                    activeSection === 'experience' 
+                    activeSection === 'competitions' 
                       ? 'text-[#D81159] font-semibold' 
                       : 'hover:scale-105'
                   }`}
                 >
-                  Competitons
+                  Competitions
                 </a>
               </li>
               <li>
@@ -603,7 +676,70 @@ export default function Home() {
           </nav>
 
           {/* Content Column - Full width on mobile */}
-          <div className="flex-1 space-y-12 max-w-2xl w-full">
+          <div className="flex-1 space-y-16 max-w-2xl w-full">
+            {/* Experience Section */}
+            <section id="experience" className="scroll-mt-8">
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8 tracking-tight">Experience</h2>
+              <div className="space-y-8">
+                {experienceData.map((exp) => (
+                  <div key={exp.id} className="group relative">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
+                      <h3 className="text-lg md:text-xl font-medium tracking-tight mb-2 flex items-center">
+                        {exp.id === 'freelance' ? (
+                          exp.role
+                        ) : (
+                          <>
+                            {exp.role} @&nbsp;<a href={exp.website} target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline transition-colors">{exp.company}</a>
+                          </>
+                        )}
+                      </h3>
+                      <p className="text-sm md:text-base font-normal text-[#8F2D56] md:ml-4 mt-2 md:mt-0">{exp.date}</p>
+                    </div>
+                    <div className="mb-2">
+                      <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">
+                        {Array.isArray(exp.description) ? (
+                          <>
+                            {exp.description.map((desc, idx) => (
+                              <span key={idx}>
+                                {exp.id === 'freelance' ? (
+                                  <>
+                                    {desc}
+                                    {idx === exp.description.length - 1 && (
+                                      <>
+                                        {' '}Recent projects include{' '}
+                                        <a href="https://thegovernancepost.com" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">thegovernancepost.com</a>
+                                        {' '}and{' '}
+                                        <a href="https://arteenpapel.com" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">arteenpapel.com</a>.
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    {desc}
+                                    {exp.id === 'rentee' && idx === exp.description.length - 1 && exp.demoLink && (
+                                      <a href={exp.demoLink} target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">demo</a>
+                                    )}
+                                    {exp.id === 'frontier' && idx === exp.description.length - 1 && exp.demoLink && (
+                                      <>
+                                        {' '}<a href={exp.demoLink} target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">Watch demo video</a>
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                                {idx < exp.description.length - 1 && ' '}
+                              </span>
+                            ))}
+                          </>
+                        ) : (
+                          exp.description
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             <section id="projects" className="scroll-mt-8">
               <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8 tracking-tight">Projects</h2>
               <div className="space-y-8">
@@ -626,17 +762,17 @@ export default function Home() {
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg md:text-xl font-medium tracking-tight mb-2 mt-6 flex items-center">
+                        <h3 className="text-lg md:text-xl font-medium tracking-tight mb-2 flex items-center">
                           {project.title}
                           {project.status && (
                             <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded whitespace-nowrap flex-shrink-0">{project.status}</span>
                           )}
                         </h3>
-                        <p className="text-[#8F2D56] mb-3 font-light text-xs md:text-sm tracking-wider uppercase">{project.techStack}</p>
+                        <p className="text-[#8F2D56] mb-4 font-light text-xs md:text-sm tracking-wider uppercase">{project.techStack}</p>
                         {/* Handle description: single string or array */}
                         {Array.isArray(project.description) ? (
                           project.description.map((descPoint, index) => (
-                            <p key={index} className="font-light text-sm md:text-base leading-relaxed text-zinc-700"> • {descPoint}</p>
+                            <p key={index} className="font-light text-sm md:text-base leading-relaxed text-zinc-700 mb-2 last:mb-0"> • {descPoint}</p>
                           ))
                         ) : (
                           <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">{project.description}</p>
@@ -648,13 +784,13 @@ export default function Home() {
               </div>
             </section>
 
-            <section id="experience" className="scroll-mt-8">
-              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-16">Competitions and awards</h2>
+            <section id="competitions" className="scroll-mt-8">
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">Competitions and awards</h2>
               {/* Timeline Container with thicker dotted line */}
               <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
                 {/* Timeline Item 1: Google Dev Group RL */}
-                <div className="mt-6 mb-8 ml-6">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                <div className="mb-8 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
                   </div>
@@ -663,7 +799,7 @@ export default function Home() {
 
                 {/* Timeline Item 2: IE HackEd */}
                 <div className="mb-8 ml-6">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
@@ -672,7 +808,7 @@ export default function Home() {
 
                 {/* Timeline Item 3: Tech Venture Bootcamp - Mappy */}
                 <div className="mb-8 ml-6">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
                   </div>
@@ -681,7 +817,7 @@ export default function Home() {
 
                 {/* Timeline Item 4: NTT Hackathon */}
                 <div className="mb-8 ml-6">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
                   </div>
@@ -690,7 +826,7 @@ export default function Home() {
 
                 {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
                 <div className="ml-6"> {/* No mb on the last item */}
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
                   </div>
@@ -702,10 +838,10 @@ export default function Home() {
             <section id="technologies" className="scroll-mt-8">
               <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">Skills and technologies</h2>
               
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {/* Web Development Category */}
                 <div>
-                  <h3 className="text-base md:text-lg font-medium mb-3 mt-6">Web Development</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-4">Web Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">React </h3>
@@ -724,7 +860,7 @@ export default function Home() {
 
                 {/* App deevelopment Category */}
                 <div>
-                  <h3 className="text-base md:text-lg font-medium mb-3">App Development</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-4">App Development</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">React Native</h3>
@@ -743,7 +879,7 @@ export default function Home() {
                 
                 {/* AI & Machine Learning Category */}
                 <div>
-                  <h3 className="text-base md:text-lg font-medium mb-3">Machine Learning</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-4">Machine Learning</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Computer Vision</h3>
@@ -762,7 +898,7 @@ export default function Home() {
                 
                 {/* Programming languages Category */}
                 <div>
-                  <h3 className="text-base md:text-lg font-medium mb-3">Programming languages</h3>
+                  <h3 className="text-base md:text-lg font-medium mb-4">Programming languages</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <h3 className="text-sm md:text-base font-medium text-[#8F2D56]">Python</h3>
@@ -783,13 +919,13 @@ export default function Home() {
             </section>
 
             <section id="about" className="scroll-mt-8 mb-16">
-              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-10">About Me</h2>
-              <p className="text-base md:text-lg font-light leading-relaxed mb-10 mt-6">
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">About Me</h2>
+              <p className="text-base md:text-lg font-light leading-relaxed mb-8">
                 I'm a very curious and active person, always looking to get out of my comfort zone, try new things and meet new people. 
                 Besides from coding and academics, I love doing adrenaline-rushing sports. Currently I really enjoy climbing, padel and horserding. 
               </p>
               
-              <div className="mt-6 w-full overflow-hidden relative mb-10">
+              <div className="w-full overflow-hidden relative">
                 <div 
                   ref={carouselRef}
                   className={`flex gap-2 md:gap-4 py-4 ${isCarouselAnimating ? (isMobile ? 'animate-carousel-mobile' : 'animate-carousel-desktop') : ''}`}
@@ -850,14 +986,14 @@ export default function Home() {
               {/* Modal Content */}
               <h3 
                 id="project-modal-title" 
-                className="clean-heading text-xl md:text-2xl font-semibold mb-6 text-[#1d1d1f]"
+                className="clean-heading text-xl md:text-2xl font-semibold mb-8 text-[#1d1d1f]"
               >
                 {selectedProject.title}
               </h3>
-              <p className="text-[#8F2D56] mt-2 mb-4 font-light text-xs md:text-sm tracking-wider uppercase font-inter">{selectedProject.techStack}</p>
+              <p className="text-[#8F2D56] mb-4 font-light text-xs md:text-sm tracking-wider uppercase font-inter">{selectedProject.techStack}</p>
 
               {/* Description */}
-              <div className="mb-6 prose prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 font-inter">
+              <div className="mb-8 prose prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 font-inter">
                 {Array.isArray(selectedProject.description) ? (
                   <ul className="list-disc pl-5 space-y-1 font-light text-sm md:text-base">
                     {selectedProject.description.map((descPoint, index) => (
