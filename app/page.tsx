@@ -925,7 +925,7 @@ export default function Home() {
               <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">About Me</h2>
               <p className="text-base md:text-lg font-light leading-relaxed mb-8">
                 I'm a very curious and active person, always looking to get out of my comfort zone, try new things and meet new people. 
-                Besides from coding and academics, I love doing adrenaline-rushing sports. Currently I really enjoy climbing, padel and horserding. 
+                Besides from coding and academics, I love doing adrenaline-rushing sports. Currently I really enjoy climbing, padel and horseriding. 
               </p>
               
               <div className="w-full overflow-hidden relative">
