@@ -72,7 +72,7 @@ export default function Home() {
   const animationFrameId = useRef<number | null>(null);
 
   // Projects eligible for the plus icon hover effect
-  const eligibleProjectIds = ['mappy', 'diverged', 'iconic', 'climbr'];
+  const eligibleProjectIds = ['mappy', 'diverged', 'climbr'];
 
   // Restructured Project Data
   const projectsData: Project[] = [
@@ -131,21 +131,30 @@ export default function Home() {
       ],
       media: [{ type: 'image', src: "/images/energy_prediction.png", alt: "Energy Production Prediction Model" }],
     },
-    {
-      id: "iconic",
-      title: "Be Iconic - Fashion App",
-      techStack: "REACT NATIVE • EXPO GO • SUPABASE",
-      description: [
-          "Designed the UI and UX for a mobile fashion application.",
-          "Built the frontend using JavaScript, React Native, and Expo Go.",
-          "Developed the backend with TypeScript and Supabase for user authentication and data management."
-      ],
-      media: [{ type: 'video', src: "/images/beiconic.mp4", alt: "Be Iconic Fashion App" }],
-    },
   ];
 
   // Experience Data
   const experienceData: Experience[] = [
+    {
+      id: 'ie-cyphy',
+      company: 'IE CyPhy Life',
+      role: 'Research Assistant',
+      website: '#',
+      date: 'Sep 2025 – Present',
+      description: [
+        'Working on simulation models to evaluate the scalability and efficiency of a human-robot interaction system with cryptocurrency-based task rewards.',
+      ],
+    },
+    {
+      id: 'innovis',
+      company: 'Innovis VC',
+      role: 'Trainee',
+      website: '#',
+      date: 'Oct 2025 – Present',
+      description: [
+        'Weekly sourcing and presentation of startups in Portugal and Spain in the DeepTech industry.',
+      ],
+    },
     {
       id: 'huuh',
       company: 'huuh.me',
@@ -153,7 +162,7 @@ export default function Home() {
       website: 'https://huuh.me/',
       date: 'June – July 2025',
       description: [
-        'A platform for building AI-powered knowledge bases with minimal hallucination. I worked on implementing multimodal RAG capabilities and image processing pipelines across both backend and frontend systems, as well as other feature implementations.',
+        'Helped implement multimodal RAG capabilities and image processing pipelines across both backend and frontend, as well as other feature implementations.',
       ],
     },
     {
@@ -164,7 +173,7 @@ export default function Home() {
       demoLink: 'https://rentee-managersuite-demo-frontend.vercel.app/analytics',
       date: 'June – July 2025',
       description: [
-        'A financial management platform for vacation property owners, Rentee Owner Suite. I built the company\'s second platform from scratch, Rentee Manager Suite, to help property managers organize and analyze their clients\' financial data. I was responsible for the backend architecture, database design, and frontend user experience. A live demo of the platform is available here: ',
+        'Built the company\'s second platform from scratch, Rentee Manager Suite, to help property managers organize and analyze their clients\' financial data. Responsible for the backend architecture, database design, and frontend user experience. A live demo of the platform is available here: ',
       ],
     },
     {
@@ -172,7 +181,6 @@ export default function Home() {
       company: 'Frontier Diagnostics',
       role: 'Frontend App Developer',
       website: 'https://frontierdiagnostics.net/',
-      demoLink: '/images/frontier_video.mp4',
       date: 'June 2025',
       description: [
         'Developed a mobile application for Frontier Diagnostics, a breast cancer diagnostics company specializing in personalized treatments. The app keeps patients informed with key updates like appointments and signing documents, and offers an anonymous social space for support and connection during treatment.',
@@ -719,11 +727,6 @@ export default function Home() {
                                     {exp.id === 'rentee' && idx === exp.description.length - 1 && exp.demoLink && (
                                       <a href={exp.demoLink} target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">demo</a>
                                     )}
-                                    {exp.id === 'frontier' && idx === exp.description.length - 1 && exp.demoLink && (
-                                      <>
-                                        {' '}<a href={exp.demoLink} target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">Watch demo video</a>
-                                      </>
-                                    )}
                                   </>
                                 )}
                                 {idx < exp.description.length - 1 && ' '}
@@ -785,52 +788,52 @@ export default function Home() {
             </section>
 
             <section id="competitions" className="scroll-mt-8">
-              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8">Competitions and awards</h2>
+              <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8 tracking-tight">Competitions and awards</h2>
               {/* Timeline Container with thicker dotted line */}
               <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
                 {/* Timeline Item 1: Google Dev Group RL */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">Google Developers Group RL Hackathon</h3>
-                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">April 2025</p>
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">Google Developers Group RL Hackathon</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">April 2025</p>
                   </div>
-                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">First Place</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">First Place</p>
                 </div>
 
                 {/* Timeline Item 2: IE HackEd */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">IE HackEd Hackathon - DivergED</h3>
-                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">IE HackEd Hackathon - DivergED</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">March 2025</p>
                   </div>
-                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">First place award from 20 teams</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">First place award from 20 teams</p>
                 </div>
 
                 {/* Timeline Item 3: Tech Venture Bootcamp - Mappy */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2025 Tech Venture Bootcamp - Mappy</h3>
-                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">March 2025</p>
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">2025 Tech Venture Bootcamp - Mappy</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">March 2025</p>
                   </div>
-                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">Top 5 from 20 competing teams</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">Top 5 from 20 competing teams</p>
                 </div>
 
                 {/* Timeline Item 4: NTT Hackathon */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">NTT Hackathon</h3>
-                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">February 2025</p>
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">NTT Hackathon</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">February 2025</p>
                   </div>
-                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">Seventh place</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">Seventh place</p>
                 </div>
 
                 {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
                 <div className="ml-6"> {/* No mb on the last item */}
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-white">2024 Tech Venture Bootcamp - Carlink</h3>
-                    <p className="text-sm md:text-base font-normal text-[#8F2D56] dark:text-pink-300 sm:ml-4">October 2024</p>
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">2024 Tech Venture Bootcamp - Carlink</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">October 2024</p>
                   </div>
-                  <p className="text-sm md:text-base font-light text-zinc-600 dark:text-zinc-400">3rd place award</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">3rd place award</p>
                 </div>
               </div>
             </section>
