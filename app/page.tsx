@@ -139,7 +139,7 @@ export default function Home() {
       id: 'ie-cyphy',
       company: 'IE CyPhy Life',
       role: 'Research Assistant',
-      website: '#',
+      website: 'https://cyphy.life/',
       date: 'Sep 2025 – Present',
       description: [
         'Working on simulation models to evaluate the scalability and efficiency of a human-robot interaction system with cryptocurrency-based task rewards.',
