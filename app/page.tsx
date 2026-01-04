@@ -149,7 +149,7 @@ export default function Home() {
       id: 'innovis',
       company: 'Innovis VC',
       role: 'Analyst',
-      website: '#',
+      website: 'https://www.innovis.vc/',
       date: 'Oct 2025 – Present',
       description: [
         'Weekly sourcing and presentation of startups in Portugal and Spain in the DeepTech industry.',
