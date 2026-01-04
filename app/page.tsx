@@ -148,7 +148,7 @@ export default function Home() {
     {
       id: 'innovis',
       company: 'Innovis VC',
-      role: 'Trainee',
+      role: 'Analyst',
       website: '#',
       date: 'Oct 2025 – Present',
       description: [
@@ -715,9 +715,9 @@ export default function Home() {
                                     {idx === exp.description.length - 1 && (
                                       <>
                                         {' '}Recent projects include{' '}
-                                        <a href="https://thegovernancepost.com" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">thegovernancepost.com</a>
+                                        <a href="https://the-governance-post.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">thegovernancepost.com</a>
                                         {' '}and{' '}
-                                        <a href="https://arteenpapel.com" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">arteenpapel.com</a>.
+                                        <a href="https://arteenpapel.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-[#8F2D56] hover:text-[#D81159] underline">arteenpapel.com</a>.
                                       </>
                                     )}
                                   </>
