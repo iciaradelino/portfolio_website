@@ -72,7 +72,31 @@ export default function Home() {
   const animationFrameId = useRef<number | null>(null);
 
   // Projects eligible for the plus icon hover effect
-  const eligibleProjectIds = ['mappy', 'diverged', 'climbr'];
+  const eligibleProjectIds = ['mappy', 'diverged', 'climbr', 'population'];
+
+  // helper function to render text with clickable links
+  const renderTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#8F2D56] hover:text-[#D81159] underline transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
 
   // Restructured Project Data
   const projectsData: Project[] = [
@@ -87,6 +111,18 @@ export default function Home() {
       ],
       media: [{ type: 'video', src: "/images/climbr_video.mp4", alt: "Climbr App Video Demo" }],
       status: "In Development",
+    },
+    {
+      id: "population",
+      title: "Population Calculator - Travel Time Demographics",
+      techStack: "Next.js • Python FastAPI • PostgreSQL • PostGIS",
+      description: [
+        "Built a web application that calculates population within travel time isochrones for any location in Europe, try it out here: https://population-calculator-roan.vercel.app/",
+        "Interactive map interface with support for walking, cycling, and driving modes with adjustable travel times (5-60 minutes).",
+        "Integrated Eurostat census data (2021) with OpenRouteService API for real-time isochrone generation and spatial analysis.",
+        "Implemented efficient caching and PostGIS spatial queries for optimized performance."
+      ],
+      media: [{ type: 'image', src: "/images/population_calculator.png", alt: "Population Calculator Application" }],
     },
     {
       id: "mappy",
@@ -775,10 +811,10 @@ export default function Home() {
                         {/* Handle description: single string or array */}
                         {Array.isArray(project.description) ? (
                           project.description.map((descPoint, index) => (
-                            <p key={index} className="font-light text-sm md:text-base leading-relaxed text-zinc-700 mb-2 last:mb-0"> • {descPoint}</p>
+                            <p key={index} className="font-light text-sm md:text-base leading-relaxed text-zinc-700 mb-2 last:mb-0"> • {renderTextWithLinks(descPoint)}</p>
                           ))
                         ) : (
-                          <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">{project.description}</p>
+                          <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">{renderTextWithLinks(project.description)}</p>
                         )}
                       </div>
                     </div>
@@ -1000,11 +1036,11 @@ export default function Home() {
                 {Array.isArray(selectedProject.description) ? (
                   <ul className="list-disc pl-5 space-y-1 font-light text-sm md:text-base">
                     {selectedProject.description.map((descPoint, index) => (
-                      <li key={index}>{descPoint}</li>
+                      <li key={index}>{renderTextWithLinks(descPoint)}</li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="font-light text-sm md:text-base leading-relaxed">{selectedProject.description}</p>
+                  <p className="font-light text-sm md:text-base leading-relaxed">{renderTextWithLinks(selectedProject.description)}</p>
                 )}
               </div>
 
