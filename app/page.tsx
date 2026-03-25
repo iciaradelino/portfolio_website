@@ -827,6 +827,7 @@ export default function Home() {
               <h2 className="clean-heading text-2xl md:text-3xl font-semibold mb-8 tracking-tight">Competitions and awards</h2>
               {/* Timeline Container with thicker dotted line */}
               <div className="relative border-l-4 border-dotted border-gray-300 dark:border-gray-600 ml-4">
+
                 {/* Timeline Item 1: Google Dev Group RL */}
                 <div className="mb-8 ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
@@ -834,6 +835,15 @@ export default function Home() {
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">April 2025</p>
                   </div>
                   <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">First Place</p>
+                </div>
+
+                {/* timeline item 1: ie venture lab */}
+                <div className="mb-8 ml-6">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
+                    <h3 className="text-lg md:text-xl font-medium tracking-tight">IE Venture Lab</h3>
+                    <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">March 2026</p>
+                  </div>
+                  <p className="font-light text-sm md:text-base leading-relaxed text-zinc-700">Finalist (Top 12 out of 145 teams)</p>
                 </div>
 
                 {/* Timeline Item 2: IE HackEd */}
@@ -864,7 +874,7 @@ export default function Home() {
                 </div>
 
                 {/* Timeline Item 5: Tech Venture Bootcamp - Carlink */}
-                <div className="ml-6"> {/* No mb on the last item */}
+                <div className="ml-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
                     <h3 className="text-lg md:text-xl font-medium tracking-tight">2024 Tech Venture Bootcamp - Carlink</h3>
                     <p className="text-sm md:text-base font-normal text-[#8F2D56] sm:ml-4 mt-2 sm:mt-0">October 2024</p>
