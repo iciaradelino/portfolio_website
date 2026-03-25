@@ -184,11 +184,11 @@ export default function Home() {
     {
       id: 'innovis',
       company: 'Innovis VC',
-      role: 'Analyst',
+      role: 'Head of Ventures',
       website: 'https://www.innovis.vc/',
       date: 'Oct 2025 – Present',
       description: [
-        'Weekly sourcing and presentation of startups in Portugal and Spain in the DeepTech industry.',
+        'Leading the quality assurance and strategic direction of startup sourcing activities: ensuring alignment with investment criteria, assessing sourced opportunities, providing pitch feedback, and advancing high-potential opportunities for partner VC firms.',
       ],
     },
     {
