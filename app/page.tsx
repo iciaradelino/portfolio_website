@@ -186,7 +186,7 @@ export default function Home() {
       company: 'Innovis VC',
       role: 'Head of Ventures',
       website: 'https://www.innovis.vc/',
-      date: 'Oct 2025 – Present',
+      date: 'January 2026 – Present',
       description: [
         'Leading the quality assurance and strategic direction of startup sourcing activities: ensuring alignment with investment criteria, assessing sourced opportunities, providing pitch feedback, and advancing high-potential opportunities for partner VC firms.',
       ],
