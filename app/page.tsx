@@ -297,6 +297,13 @@ export default function Home() {
       description: 'Startup intensive: built Carlink, carsharing platform',
       date: 'October 2024',
     },
+    {
+      id: 'top1',
+      place: 'Top 1',
+    title: 'Class ranking',
+      description: 'Out of 81 CS & AI students',
+      date: 'First and second year',
+    },
   ];
 
   // skills derived from projects + experience on this site
